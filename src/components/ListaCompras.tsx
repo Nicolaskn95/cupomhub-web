@@ -740,16 +740,16 @@ export function ListaCompras() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-16">
+      <div className="flex flex-col items-center justify-center py-16 px-4">
         <Loader2 className="h-10 w-10 animate-spin text-green-600 mb-4" />
-        <p className="text-gray-500 font-medium">Carregando sua lista de compras...</p>
+        <p className="text-gray-500 font-medium text-center text-sm sm:text-base">Carregando sua lista de compras...</p>
       </div>
     );
   }
 
   if (generating) {
     return (
-      <div className="flex flex-col items-center justify-center py-16">
+      <div className="flex flex-col items-center justify-center py-16 px-4">
         <div className="book-loader">
           <div>
             <ul>
@@ -763,10 +763,10 @@ export function ListaCompras() {
             </ul>
           </div>
         </div>
-        <p className="mt-6 text-gray-700 font-semibold text-lg">
+        <p className="mt-6 text-gray-700 font-semibold text-base sm:text-lg text-center">
           Processando produtos no histórico do mercado com IA (RAG)...
         </p>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-xs sm:text-sm text-gray-500 mt-1 text-center max-w-md">
           Relacionando os itens que você falou com os produtos cadastrados nas suas notas fiscais.
         </p>
       </div>
@@ -774,38 +774,38 @@ export function ListaCompras() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 relative">
-      <div className="mb-6">
+    <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8 relative">
+      <div className="mb-4 sm:mb-6">
         <h1
-          className="text-3xl font-bold flex items-center gap-3 mb-2"
+          className="text-2xl sm:text-3xl font-bold flex items-center gap-2.5 sm:gap-3 mb-1.5 sm:mb-2"
           style={{
             background: `linear-gradient(135deg, ${secondaryColor}, ${color})`,
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
           }}
         >
-          <ClipboardList className="h-8 w-8" style={{ color }} />
-          Lista de Compras Inteligente
+          <ClipboardList className="h-7 w-7 sm:h-8 sm:w-8 shrink-0" style={{ color }} />
+          <span>Lista de Compras Inteligente</span>
         </h1>
-        <p className="text-gray-600">
+        <p className="text-xs sm:text-sm text-gray-600">
           Vá falando os produtos conforme acabam em casa e processe tudo no mercado escolhido usando IA (PLN + RAG).
         </p>
       </div>
 
       {!lista ? (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Seletor de Modo */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200">
             <button
               onClick={() => setModoCriacao("voz")}
-              className={`flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl font-semibold text-sm transition-all ${
+              className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
                 modoCriacao === "voz"
                   ? "bg-white text-gray-900 shadow-sm"
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              <Mic className="w-4 h-4" style={{ color: modoCriacao === "voz" ? color : undefined }} />
-              Montar por Voz (Conforme Acaba)
+              <Mic className="w-4 h-4 shrink-0" style={{ color: modoCriacao === "voz" ? color : undefined }} />
+              <span>Montar por Voz (Conforme Acaba)</span>
               {rascunhoItens.length > 0 && (
                 <span
                   className="px-2 py-0.5 text-xs rounded-full text-white font-bold"
@@ -818,32 +818,32 @@ export function ListaCompras() {
 
             <button
               onClick={() => setModoCriacao("recorrencia")}
-              className={`flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl font-semibold text-sm transition-all ${
+              className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
                 modoCriacao === "recorrencia"
                   ? "bg-white text-gray-900 shadow-sm"
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
               <History
-                className="w-4 h-4"
+                className="w-4 h-4 shrink-0"
                 style={{ color: modoCriacao === "recorrencia" ? color : undefined }}
               />
-              Sugerir apenas por Recorrência
+              <span>Sugerir apenas por Recorrência</span>
             </button>
           </div>
 
           {modoCriacao === "voz" && (
             <>
               {/* Card de Comando de Voz (PLN) */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+                <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6">
                   {/* Botão Microfone Pulsante */}
                   <div className="flex flex-col items-center shrink-0">
                     <button
                       type="button"
                       onClick={() => toggleMicrofone(false)}
                       disabled={processandoVoz}
-                      className={`relative w-24 h-24 rounded-full flex items-center justify-center text-white shadow-xl transition-all duration-300 ${
+                      className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center text-white shadow-xl transition-all duration-300 active:scale-95 ${
                         isListening
                           ? "scale-105 ring-8 ring-red-500/20 bg-red-500 hover:bg-red-600"
                           : "hover:scale-105"
@@ -856,14 +856,14 @@ export function ListaCompras() {
                       title={isListening ? "Toque para finalizar e adicionar" : "Toque para falar"}
                     >
                       {processandoVoz ? (
-                        <Loader2 className="w-10 h-10 animate-spin" />
+                        <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 animate-spin" />
                       ) : isListening ? (
-                        <MicOff className="w-10 h-10 relative z-10" />
+                        <MicOff className="w-8 h-8 sm:w-10 sm:h-10 relative z-10" />
                       ) : (
-                        <Mic className="w-10 h-10 relative z-10" />
+                        <Mic className="w-8 h-8 sm:w-10 sm:h-10 relative z-10" />
                       )}
                     </button>
-                    <span className="mt-2.5 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <span className="mt-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
                       {isListening
                         ? "Ouvindo... Toque p/ enviar"
                         : processandoVoz
@@ -873,13 +873,13 @@ export function ListaCompras() {
                   </div>
 
                   {/* Área de Transcrição / Digitação */}
-                  <div className="flex-1 w-full space-y-3">
+                  <div className="flex-1 w-full space-y-2.5 sm:space-y-3">
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                        <Sparkles className="w-5 h-5" style={{ color }} />
-                        Fale os itens que estão acabando
+                      <h2 className="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" style={{ color }} />
+                        <span>Fale os itens que estão acabando</span>
                       </h2>
-                      <p className="text-xs text-gray-500 mt-0.5">
+                      <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5 leading-relaxed">
                         Ex:{" "}
                         <span className="italic text-gray-600">
                           &ldquo;adicionar 3 limões, 1 kilo de carne moída, azeite, 1 macarrão
@@ -907,8 +907,8 @@ export function ListaCompras() {
                             enviarTextoComandoVoz(textoComandoVoz, false);
                           }
                         }}
-                        placeholder="Aperte o microfone e fale, ou digite/dite pelo teclado aqui os itens..."
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 pr-14 text-sm text-gray-800 focus:outline-none focus:border-green-500 transition-colors resize-none"
+                        placeholder="Aperte o microfone e fale, ou digite aqui os itens..."
+                        className="w-full border-2 border-gray-200 rounded-xl px-3.5 py-2.5 pr-12 sm:px-4 sm:py-3 sm:pr-14 text-xs sm:text-sm text-gray-800 focus:outline-none focus:border-green-500 transition-colors resize-none"
                       />
                       <button
                         type="button"
@@ -922,7 +922,7 @@ export function ListaCompras() {
                           processandoVoz ||
                           (!textoComandoVoz.trim() && !interimTranscript.trim())
                         }
-                        className="absolute right-3 bottom-3 p-2.5 rounded-lg text-white shadow-sm disabled:opacity-40 transition-all hover:opacity-90"
+                        className="absolute right-2.5 bottom-2.5 p-2 sm:p-2.5 rounded-lg text-white shadow-sm disabled:opacity-40 transition-all hover:opacity-90 active:scale-95"
                         style={{
                           background: `linear-gradient(135deg, ${secondaryColor}, ${color})`,
                         }}
@@ -931,7 +931,7 @@ export function ListaCompras() {
                         {processandoVoz ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                          <Send className="w-4 h-4" />
+                          <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         )}
                       </button>
                     </div>
@@ -965,13 +965,13 @@ export function ListaCompras() {
               </div>
 
               {/* Lista de Rascunho Acumulada */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <div className="flex items-center justify-between mb-4">
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                   <div>
-                    <h3 className="text-lg font-bold text-gray-800">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-800">
                       Itens Anotados na Pré-Lista ({rascunhoItens.length})
                     </h3>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-[11px] sm:text-xs text-gray-500">
                       Salvos automaticamente na sua conta conforme você vai falando ao longo da
                       semana.
                     </p>
@@ -979,7 +979,7 @@ export function ListaCompras() {
                   {rascunhoItens.length > 0 && (
                     <button
                       onClick={limparTodoRascunho}
-                      className="text-xs font-medium text-red-600 hover:text-red-700 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors"
+                      className="self-end sm:self-auto text-xs font-medium text-red-600 hover:text-red-700 flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-red-50 transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" /> Limpar tudo
                     </button>
@@ -987,12 +987,12 @@ export function ListaCompras() {
                 </div>
 
                 {rascunhoItens.length === 0 ? (
-                  <div className="text-center py-10 bg-gray-50/70 rounded-xl border border-dashed border-gray-200">
-                    <Mic className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-600 font-medium text-sm">
+                  <div className="text-center py-8 sm:py-10 bg-gray-50/70 rounded-xl border border-dashed border-gray-200 px-3">
+                    <Mic className="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 mx-auto mb-2" />
+                    <p className="text-gray-600 font-medium text-xs sm:text-sm">
                       Sua pré-lista ainda está vazia.
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-[11px] sm:text-xs text-gray-400 mt-1">
                       Toque no botão de microfone acima e diga o que acabou em casa!
                     </p>
                   </div>
@@ -1001,36 +1001,36 @@ export function ListaCompras() {
                     {rascunhoItens.map((item, idx) => (
                       <div
                         key={`${item.termoFalado}-${idx}`}
-                        className="py-3 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3"
+                        className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3"
                       >
-                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex items-center gap-2.5 min-w-0 flex-1">
                           <span
-                            className="w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center text-white shrink-0"
+                            className="w-6 h-6 sm:w-7 sm:h-7 rounded-full text-xs font-bold flex items-center justify-center text-white shrink-0"
                             style={{ backgroundColor: color }}
                           >
                             {idx + 1}
                           </span>
-                          <span className="font-semibold text-gray-800 truncate">
+                          <span className="font-semibold text-gray-800 text-sm sm:text-base break-words whitespace-normal">
                             {item.termoFalado}
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-2 shrink-0">
+                        <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 w-full sm:w-auto pl-8 sm:pl-0">
                           <div className="flex items-center border border-gray-200 rounded-lg bg-gray-50">
                             <button
                               type="button"
                               onClick={() => alterarQuantidadeRascunho(idx, -1)}
-                              className="p-1.5 text-gray-600 hover:text-gray-900"
+                              className="p-1.5 text-gray-600 hover:text-gray-900 active:scale-95"
                             >
                               <Minus className="w-3.5 h-3.5" />
                             </button>
-                            <span className="px-2.5 text-sm font-bold text-gray-800 min-w-[2.5rem] text-center">
+                            <span className="px-2 text-xs sm:text-sm font-bold text-gray-800 min-w-[2.2rem] text-center">
                               {item.quantidade}
                             </span>
                             <button
                               type="button"
                               onClick={() => alterarQuantidadeRascunho(idx, 1)}
-                              className="p-1.5 text-gray-600 hover:text-gray-900"
+                              className="p-1.5 text-gray-600 hover:text-gray-900 active:scale-95"
                             >
                               <Plus className="w-3.5 h-3.5" />
                             </button>
@@ -1051,7 +1051,7 @@ export function ListaCompras() {
                           <button
                             type="button"
                             onClick={() => removerItemRascunho(idx)}
-                            className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                            className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors ml-auto sm:ml-0"
                             title="Remover item"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -1066,14 +1066,16 @@ export function ListaCompras() {
           )}
 
           {/* Seleção do Mercado para Processar a Lista */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-bold mb-1 text-gray-800 flex items-center gap-2">
-              <Store className="w-5 h-5" style={{ color }} />
-              {modoCriacao === "voz"
-                ? "Em qual mercado você vai comprar?"
-                : "Selecione o Estabelecimento"}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-bold mb-1 text-gray-800 flex items-center gap-2">
+              <Store className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" style={{ color }} />
+              <span>
+                {modoCriacao === "voz"
+                  ? "Em qual mercado você vai comprar?"
+                  : "Selecione o Estabelecimento"}
+              </span>
             </h2>
-            <p className="text-xs text-gray-500 mb-4">
+            <p className="text-[11px] sm:text-xs text-gray-500 mb-4">
               {modoCriacao === "voz"
                 ? "O motor RAG buscará no histórico deste mercado qual produto cadastrado corresponde a cada item que você falou."
                 : "Analisaremos suas notas fiscais deste estabelecimento para sugerir itens frequentes."}
@@ -1084,29 +1086,29 @@ export function ListaCompras() {
                 <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
               </div>
             ) : mercados.length === 0 ? (
-              <div className="text-center py-8 bg-gray-50 rounded-lg">
-                <p className="text-gray-600">
+              <div className="text-center py-6 sm:py-8 bg-gray-50 rounded-xl p-4">
+                <p className="text-xs sm:text-sm text-gray-600">
                   Nenhum histórico de mercado encontrado. Escaneie notas fiscais para habilitar o
                   vínculo com mercados!
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {mercados.map((m) => (
                   <div
                     key={m.cnpj}
                     onClick={() => setSelectedCnpj(m.cnpj)}
-                    className={`cursor-pointer border-2 rounded-xl p-4 transition-all ${
+                    className={`cursor-pointer border-2 rounded-xl p-3 sm:p-4 transition-all active:scale-[0.99] ${
                       selectedCnpj === m.cnpj
                         ? "shadow-md scale-[1.01] bg-gray-50/40"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
                     style={{ borderColor: selectedCnpj === m.cnpj ? color : undefined }}
                   >
-                    <h3 className="font-semibold text-gray-800 mb-1">
+                    <h3 className="font-semibold text-gray-800 mb-1 text-sm sm:text-base leading-tight break-words">
                       {m.nomeDepara || m.nomeOriginal}
                     </h3>
-                    <p className="text-sm text-gray-500 mb-3">CNPJ: {formatCnpj(m.cnpj)}</p>
+                    <p className="text-xs text-gray-500 mb-2.5 font-mono">CNPJ: {formatCnpj(m.cnpj)}</p>
                     <div className="flex items-center justify-between text-xs font-medium text-gray-500 bg-gray-50 p-2 rounded-lg">
                       <span>{m.totalNotas} notas</span>
                       <span>{m.mesesDisponiveis} meses de hist.</span>
@@ -1117,15 +1119,15 @@ export function ListaCompras() {
             )}
 
             {mercados.length > 0 && (
-              <div className="mt-6 pt-5 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-gray-100 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
                 {modoCriacao === "voz" ? (
                   <>
-                    <label className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer select-none">
+                    <label className="flex items-start sm:items-center gap-2.5 text-xs sm:text-sm text-gray-700 cursor-pointer select-none">
                       <input
                         type="checkbox"
                         checked={incluirSugestoesRecorrentes}
                         onChange={(e) => setIncluirSugestoesRecorrentes(e.target.checked)}
-                        className="w-4 h-4 rounded text-green-600 focus:ring-0"
+                        className="w-4 h-4 rounded text-green-600 focus:ring-0 shrink-0 mt-0.5 sm:mt-0"
                       />
                       <span>
                         Incluir também produtos recorrentes deste mercado que não citei por voz
@@ -1135,27 +1137,27 @@ export function ListaCompras() {
                     <button
                       onClick={handleProcessarRagNoMercado}
                       disabled={!selectedCnpj || rascunhoItens.length === 0}
-                      className="w-full md:w-auto px-7 py-3.5 rounded-xl font-bold text-white shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                      className="w-full md:w-auto px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm text-white shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2"
                       style={{
                         background: `linear-gradient(135deg, ${secondaryColor}, ${color})`,
                       }}
                     >
-                      <Sparkles className="w-5 h-5" />
-                      Processar Lista no Mercado (RAG)
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                      <span>Processar Lista no Mercado (RAG)</span>
                     </button>
                   </>
                 ) : (
                   <>
                     <div className="flex-1 w-full">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                         Analisar últimos {periodoMeses} meses
                       </label>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-1">
                         {[1, 2, 3, 4, 5, 6].map((m) => (
                           <button
                             key={m}
                             onClick={() => setPeriodoMeses(m)}
-                            className={`w-10 h-10 rounded-full font-medium transition-colors ${
+                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full font-medium transition-colors shrink-0 text-xs sm:text-sm ${
                               periodoMeses === m
                                 ? "text-white shadow-sm"
                                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -1173,7 +1175,7 @@ export function ListaCompras() {
                     <button
                       onClick={handleGerarListaRecorrencia}
                       disabled={!selectedCnpj}
-                      className="w-full md:w-auto px-8 py-3 rounded-xl font-bold text-white shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-1"
+                      className="w-full md:w-auto px-6 sm:px-8 py-3 rounded-xl font-bold text-xs sm:text-sm text-white shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-1 active:scale-95"
                       style={{
                         background: `linear-gradient(135deg, ${secondaryColor}, ${color})`,
                       }}
@@ -1187,30 +1189,31 @@ export function ListaCompras() {
           </div>
         </div>
       ) : (
-        <div className="space-y-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex items-center justify-between gap-2.5">
             <button
               onClick={deleteList}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200 transition-colors"
+              className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-600 hover:text-gray-900 font-medium px-3 sm:px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200 transition-colors shrink-0 active:scale-95"
             >
-              <ArrowLeft className="h-4 w-4" /> Nova Lista / Voltar
+              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span>Nova Lista</span>
             </button>
 
             <button
               onClick={() => setShowChecked(!showChecked)}
-              className="text-sm font-medium text-gray-600 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200"
+              className="text-xs sm:text-sm font-medium text-gray-600 bg-white px-3 sm:px-4 py-2 rounded-lg shadow-sm border border-gray-200 active:scale-95 text-center"
             >
               {showChecked ? "Ocultar comprados" : "Mostrar comprados"}
             </button>
           </div>
 
           {/* Barra rápida para adicionar mais itens por voz na lista já gerada */}
-          <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-center gap-3">
+          <div className="bg-white p-2.5 sm:p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => toggleMicrofone(true)}
               disabled={processandoVoz}
-              className={`w-11 h-11 rounded-full flex items-center justify-center text-white shrink-0 shadow transition-all ${
+              className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-white shrink-0 shadow transition-all active:scale-95 ${
                 isListening ? "bg-red-500 animate-pulse" : ""
               }`}
               style={{
@@ -1221,11 +1224,11 @@ export function ListaCompras() {
               title="Falar mais itens para esta lista"
             >
               {processandoVoz ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
               ) : isListening ? (
-                <MicOff className="w-5 h-5" />
+                <MicOff className="w-4 h-4 sm:w-5 sm:h-5" />
               ) : (
-                <Mic className="w-5 h-5" />
+                <Mic className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
             </button>
 
@@ -1247,8 +1250,8 @@ export function ListaCompras() {
                   enviarTextoComandoVoz(textoComandoVoz, true);
                 }
               }}
-              placeholder="Esqueceu algo? Toque no microfone ou digite: ex. 'adicionar 2 leites e 1 café'..."
-              className="flex-1 w-full text-sm border border-gray-200 rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-green-500"
+              placeholder="Esqueceu algo? Fale ou digite..."
+              className="flex-1 min-w-0 text-xs sm:text-sm border border-gray-200 rounded-lg px-2.5 sm:px-3.5 py-2 sm:py-2.5 focus:outline-none focus:border-green-500"
             />
 
             <button
@@ -1262,25 +1265,27 @@ export function ListaCompras() {
               disabled={
                 processandoVoz || (!textoComandoVoz.trim() && !interimTranscript.trim())
               }
-              className="px-4 py-2.5 rounded-lg text-xs font-bold text-white shadow-sm disabled:opacity-40 shrink-0"
+              className="px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-xs font-bold text-white shadow-sm disabled:opacity-40 shrink-0 flex items-center justify-center gap-1 active:scale-95"
               style={{
                 background: `linear-gradient(135deg, ${secondaryColor}, ${color})`,
               }}
             >
-              Adicionar c/ RAG
+              <span className="hidden sm:inline">Adicionar c/ RAG</span>
+              <Send className="w-3.5 h-3.5 sm:hidden" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+          {/* Cards de Resumo Compactos no Mobile */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-4">
+            <div className="bg-white p-2.5 sm:p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500 font-medium mb-1">Estimativa Total</p>
-                <p className="text-2xl font-bold text-gray-800">
+                <p className="text-[10px] sm:text-sm text-gray-500 font-medium mb-0.5 sm:mb-1">Estimativa</p>
+                <p className="text-sm sm:text-2xl font-bold text-gray-800 truncate">
                   {formatCurrency(lista.estimativaTotal)}
                 </p>
               </div>
               <div
-                className="h-12 w-12 rounded-full flex items-center justify-center opacity-20"
+                className="hidden sm:flex h-12 w-12 rounded-full items-center justify-center opacity-20"
                 style={{ backgroundColor: color }}
               >
                 <span className="text-2xl" style={{ color: secondaryColor }}>
@@ -1289,13 +1294,13 @@ export function ListaCompras() {
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+            <div className="bg-white p-2.5 sm:p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500 font-medium mb-1">Total de Itens</p>
-                <p className="text-2xl font-bold text-gray-800">{lista.itens.length}</p>
+                <p className="text-[10px] sm:text-sm text-gray-500 font-medium mb-0.5 sm:mb-1">Total Itens</p>
+                <p className="text-sm sm:text-2xl font-bold text-gray-800">{lista.itens.length}</p>
               </div>
               <div
-                className="h-12 w-12 rounded-full flex items-center justify-center opacity-20"
+                className="hidden sm:flex h-12 w-12 rounded-full items-center justify-center opacity-20"
                 style={{ backgroundColor: color }}
               >
                 <span className="text-2xl" style={{ color: secondaryColor }}>
@@ -1304,16 +1309,16 @@ export function ListaCompras() {
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-500 font-medium">Comprados</p>
-                <p className="text-sm font-bold text-gray-800">
-                  {lista.itens.filter((i) => i.comprado).length} / {lista.itens.length}
+            <div className="bg-white p-2.5 sm:p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between">
+              <div className="flex items-center justify-between mb-1 sm:mb-2">
+                <p className="text-[10px] sm:text-sm text-gray-500 font-medium">Comprados</p>
+                <p className="text-[11px] sm:text-sm font-bold text-gray-800">
+                  {lista.itens.filter((i) => i.comprado).length}/{lista.itens.length}
                 </p>
               </div>
-              <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+              <div className="w-full bg-gray-100 rounded-full h-1.5 sm:h-2.5 overflow-hidden">
                 <div
-                  className="h-2.5 rounded-full transition-all duration-500"
+                  className="h-full rounded-full transition-all duration-500"
                   style={{
                     width: `${
                       lista.itens.length > 0
@@ -1329,43 +1334,44 @@ export function ListaCompras() {
           </div>
 
           {lista.itens.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-              <p className="text-lg text-gray-600 font-medium">Nenhum produto encontrado.</p>
-              <p className="text-gray-500 mt-2">
+            <div className="text-center py-10 sm:py-12 bg-white rounded-xl shadow-sm border border-gray-100 px-4">
+              <p className="text-base sm:text-lg text-gray-600 font-medium">Nenhum produto encontrado.</p>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">
                 Adicione itens usando o microfone acima ou tente selecionar outro mercado.
               </p>
             </div>
           ) : (
-            <div className="notebook-container mt-8 max-w-3xl mx-auto">
+            <div className="notebook-container mt-4 sm:mt-8 max-w-3xl mx-auto">
               <div className="notebook-spiral">
                 {[...Array(15)].map((_, i) => (
                   <div key={i} className="notebook-ring"></div>
                 ))}
               </div>
               <div className="notebook-page">
-                <div className="mb-6 border-b-2 border-gray-300 pb-2 flex justify-between items-end">
-                  <div>
-                    <h2 className="font-['Patrick_Hand'] text-3xl text-gray-800 tracking-wide">
+                <div className="mb-4 sm:mb-6 border-b-2 border-gray-300 pb-2 sm:pb-3 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-1">
+                  <div className="min-w-0">
+                    <h2 className="font-['Patrick_Hand'] text-2xl sm:text-3xl text-gray-800 tracking-wide truncate">
                       {lista.nomeEstabelecimento}
                     </h2>
-                    <p className="text-xs text-gray-500 font-sans">
-                      Produto falado por você <ArrowRight className="inline w-3 h-3 mx-1" />{" "}
-                      Produto relacionado cadastrado no mercado
+                    <p className="text-[11px] sm:text-xs text-gray-500 font-sans flex items-center flex-wrap">
+                      <span>Produto falado</span>
+                      <ArrowRight className="inline w-3 h-3 mx-1 shrink-0" />
+                      <span>Cadastrado no mercado</span>
                     </p>
                   </div>
-                  <span className="font-['Patrick_Hand'] text-lg text-gray-500">
+                  <span className="font-['Patrick_Hand'] text-sm sm:text-lg text-gray-500 shrink-0">
                     {new Date(lista.createdAt).toLocaleDateString("pt-BR")}
                   </span>
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 sm:space-y-2">
                   {lista.itens
                     .map((item, index) => ({ item, index }))
                     .filter(({ item }) => showChecked || !item.comprado)
                     .map(({ item, index }) => {
                       const apelidoSalvo = getApelidoName(item.nomeOriginal);
                       const nomeFaladoOuPrincipal =
-                        apelidoSalvo || item.termoFalado || item.nome;
+                        item.termoFalado || apelidoSalvo || item.nome;
                       const nomeCadastradoMercado =
                         item.nomeMercado ||
                         (item.origemMatch !== "SEM_HISTORICO" ? item.nomeOriginal : null);
@@ -1373,77 +1379,93 @@ export function ListaCompras() {
                       return (
                         <div
                           key={index}
-                          className={`notebook-item group flex-wrap sm:flex-nowrap py-2 ${
-                            item.comprado ? "checked" : ""
+                          className={`notebook-item group py-2.5 transition-colors ${
+                            item.comprado ? "checked bg-black/[0.02]" : "hover:bg-black/[0.02]"
                           }`}
                         >
                           <button
-                            className={`notebook-checkbox shrink-0 ${
+                            className={`notebook-checkbox shrink-0 mt-1 ${
                               item.comprado ? "checked" : ""
                             }`}
                             onClick={() => toggleItem(index)}
+                            aria-label={item.comprado ? "Marcar como não comprado" : "Marcar como comprado"}
                           >
-                            <Check className="w-4 h-4 text-white opacity-0 transition-opacity" />
+                            <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white opacity-0 transition-opacity" />
                           </button>
 
-                          {/* Coluna Central: O que o usuário disse + Do lado o nome cadastrado no mercado */}
+                          {/* Coluna Central: O que o usuário falou em destaque total sem cortar nenhuma palavra */}
                           <div
-                            className="flex-1 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2.5 min-w-0 cursor-pointer"
+                            className="flex-1 min-w-0 cursor-pointer select-none py-0.5"
                             onClick={() => toggleItem(index)}
                           >
-                            <span className="item-text font-semibold text-gray-900 truncate">
-                              {nomeFaladoOuPrincipal}
-                            </span>
+                            <div className="flex items-start gap-1.5 flex-wrap">
+                              <span className="item-text font-semibold text-gray-900 text-base sm:text-lg leading-snug break-words whitespace-normal">
+                                {nomeFaladoOuPrincipal}
+                              </span>
 
-                            {nomeCadastradoMercado ? (
-                              <span
-                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-mono tracking-tight border max-w-full truncate ${
-                                  item.origemMatch === "OUTRO_MERCADO"
-                                    ? "bg-amber-50 text-amber-800 border-amber-200"
-                                    : "bg-emerald-50 text-emerald-800 border-emerald-200"
-                                }`}
-                                title={
-                                  item.origemMatch === "OUTRO_MERCADO"
-                                    ? `Referência de outro mercado: ${item.estabelecimentoOrigem}`
-                                    : `Cadastrado no mercado: ${nomeCadastradoMercado}`
-                                }
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setApelidoModal({
+                                    open: true,
+                                    nomeOriginal: item.nomeOriginal,
+                                    apelido: apelidoSalvo || item.termoFalado || "",
+                                  });
+                                }}
+                                className="opacity-70 sm:opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200/60 rounded shrink-0 self-center"
+                                title="Renomear apelido"
                               >
-                                <ArrowRight className="w-3 h-3 shrink-0" />
-                                <span className="truncate">{nomeCadastradoMercado}</span>
-                                {item.origemMatch === "OUTRO_MERCADO" &&
-                                  item.estabelecimentoOrigem && (
-                                    <span className="text-[10px] font-sans font-semibold opacity-75 shrink-0">
-                                      ({item.estabelecimentoOrigem})
-                                    </span>
-                                  )}
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-sans bg-gray-100 text-gray-500 border border-gray-200 w-fit">
-                                Sem histórico neste mercado
-                              </span>
-                            )}
+                                <Edit2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-500 hover:text-gray-700" />
+                              </button>
 
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setApelidoModal({
-                                  open: true,
-                                  nomeOriginal: item.nomeOriginal,
-                                  apelido: apelidoSalvo || item.termoFalado || "",
-                                });
-                              }}
-                              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200/50 rounded w-fit"
-                              title="Renomear apelido"
-                            >
-                              <Edit2 className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
-                            </button>
+                              {apelidoSalvo && item.termoFalado && apelidoSalvo.toLowerCase() !== item.termoFalado.toLowerCase() && (
+                                <span className="text-xs text-gray-500 font-sans italic self-center">
+                                  (Apelido: {apelidoSalvo})
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Produto cadastrado correspondente no mercado (sem truncate para leitura completa) */}
+                            <div className="mt-1 flex items-center flex-wrap gap-1.5">
+                              {nomeCadastradoMercado ? (
+                                <span
+                                  className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] sm:text-xs font-mono tracking-tight border break-words whitespace-normal ${
+                                    item.origemMatch === "OUTRO_MERCADO"
+                                      ? "bg-amber-50 text-amber-800 border-amber-200"
+                                      : "bg-emerald-50 text-emerald-800 border-emerald-200"
+                                  }`}
+                                  title={
+                                    item.origemMatch === "OUTRO_MERCADO"
+                                      ? `Referência de outro mercado: ${item.estabelecimentoOrigem}`
+                                      : `Cadastrado no mercado: ${nomeCadastradoMercado}`
+                                  }
+                                >
+                                  <ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0 opacity-70" />
+                                  <span className="break-words whitespace-normal">{nomeCadastradoMercado}</span>
+                                  {item.origemMatch === "OUTRO_MERCADO" &&
+                                    item.estabelecimentoOrigem && (
+                                      <span className="text-[9px] sm:text-[10px] font-sans font-semibold opacity-75 shrink-0">
+                                        ({item.estabelecimentoOrigem})
+                                      </span>
+                                    )}
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] sm:text-xs font-sans bg-gray-100 text-gray-500 border border-gray-200 w-fit">
+                                  Sem histórico no mercado
+                                </span>
+                              )}
+                            </div>
                           </div>
 
-                          <div className="flex items-center gap-3 text-[1rem] shrink-0 text-gray-600 item-text ml-auto">
-                            <span className="w-16 text-right font-medium">
+                          {/* Quantidade e Valor Estimado */}
+                          <div
+                            className="flex flex-col sm:flex-row items-end sm:items-center gap-0.5 sm:gap-3 text-xs sm:text-base shrink-0 text-gray-600 item-text ml-2 sm:ml-4 select-none cursor-pointer self-start sm:self-center pt-1 sm:pt-0"
+                            onClick={() => toggleItem(index)}
+                          >
+                            <span className="text-right font-medium whitespace-nowrap">
                               {item.quantidade} {item.unidade}
                             </span>
-                            <span className="w-24 text-right font-semibold">
+                            <span className="min-w-[3.5rem] sm:min-w-[5rem] text-right font-semibold whitespace-nowrap text-gray-800">
                               {item.valorEstimado > 0
                                 ? formatCurrency(item.valorEstimado)
                                 : "—"}
@@ -1462,30 +1484,30 @@ export function ListaCompras() {
       {apelidoModal.open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-gray-800">Renomear Produto</h3>
+            <div className="p-4 sm:p-6">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800">Renomear Produto</h3>
                 <button
                   onClick={() =>
                     setApelidoModal({ open: false, nomeOriginal: "", apelido: "" })
                   }
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 p-1 rounded-lg"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="mb-5 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+              <div className="mb-4 sm:mb-5 bg-gray-50 p-3 sm:p-4 rounded-xl border border-gray-100">
+                <p className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
                   Nome Cadastrado na Nota do Mercado
                 </p>
-                <p className="font-mono text-sm text-gray-700 break-words">
+                <p className="font-mono text-xs sm:text-sm text-gray-700 break-words">
                   {apelidoModal.nomeOriginal}
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+              <div className="space-y-1.5 sm:space-y-2">
+                <label className="text-xs sm:text-sm font-medium text-gray-700">
                   Como você chama este produto?
                 </label>
                 <input
@@ -1495,25 +1517,25 @@ export function ListaCompras() {
                     setApelidoModal((prev) => ({ ...prev, apelido: e.target.value }))
                   }
                   placeholder="Ex: Leite Integral, Macarrão Penne..."
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-colors"
+                  className="w-full border-2 border-gray-200 rounded-xl px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm focus:outline-none focus:border-green-500 transition-colors"
                   autoFocus
                 />
               </div>
             </div>
 
-            <div className="bg-gray-50 p-4 flex justify-end gap-3 border-t border-gray-100">
+            <div className="bg-gray-50 p-3.5 sm:p-4 flex justify-end gap-2.5 sm:gap-3 border-t border-gray-100">
               <button
                 onClick={() =>
                   setApelidoModal({ open: false, nomeOriginal: "", apelido: "" })
                 }
-                className="px-5 py-2 font-medium text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
+                className="px-4 sm:px-5 py-2 font-medium text-xs sm:text-sm text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleSaveApelido}
                 disabled={!apelidoModal.apelido.trim()}
-                className="px-5 py-2 font-bold text-white rounded-lg shadow-md disabled:opacity-50 transition-all hover:-translate-y-0.5"
+                className="px-4 sm:px-5 py-2 font-bold text-xs sm:text-sm text-white rounded-lg shadow-md disabled:opacity-50 transition-all hover:-translate-y-0.5 active:scale-95"
                 style={{
                   background: `linear-gradient(135deg, ${secondaryColor}, ${color})`,
                 }}

@@ -13,7 +13,7 @@ import {
   persistSession,
   registerRequest,
 } from "@/lib/auth-api";
-import { Loader } from "./Loader";
+import { SplashScreen } from "./SplashScreen";
 
 const GOOGLE_CLIENT_ID =
   process.env.GOOGLE_CLIENT_ID ||
@@ -75,8 +75,8 @@ function CustomGoogleLoginButton({
         const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
           headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
         });
-        const userInfo = await res.json();
-        
+        await res.json();
+
         // Se temos o access_token, passamos via token especial ou tratamos via backend
         // Caso tenhamos tokenResponse.access_token, fazemos a troca ou passamos o token
         if (tokenResponse.access_token) {
@@ -115,6 +115,9 @@ function LoginFormContent() {
   useEffect(() => {
     if (!rememberReady) return;
     if (getAccessToken()) {
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("deolhonanota_just_logged_in", "1");
+      }
       router.replace("/notasfiscais");
       return;
     }
@@ -141,6 +144,9 @@ function LoginFormContent() {
     try {
       const data = await googleLoginRequest(tokenOrCredential, remember);
       persistSession(data, remember);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("deolhonanota_just_logged_in", "1");
+      }
       router.push("/notasfiscais");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro ao entrar com Google");
@@ -176,6 +182,9 @@ function LoginFormContent() {
     try {
       const data = await loginRequest(username.trim(), password, remember);
       persistSession(data, remember);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("deolhonanota_just_logged_in", "1");
+      }
       router.push("/notasfiscais");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Falha ao entrar");
@@ -196,6 +205,9 @@ function LoginFormContent() {
       await registerRequest(username.trim(), password);
       const data = await loginRequest(username.trim(), password, remember);
       persistSession(data, remember);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("deolhonanota_just_logged_in", "1");
+      }
       router.push("/notasfiscais");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Falha ao criar conta");
@@ -207,11 +219,7 @@ function LoginFormContent() {
   const isLogin = mode === "login";
 
   if (checkingSession) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#002545]">
-        <Loader />
-      </div>
-    );
+    return <SplashScreen />;
   }
 
   return (
@@ -242,7 +250,7 @@ function LoginFormContent() {
           />
           {/* Overlay Gradiente Azul Marinho Oficial da Marca (#002545) */}
           <div className="absolute inset-0 bg-gradient-to-tr from-[#002545]/95 via-[#0e3b64]/85 to-[#002545]/70 backdrop-blur-[2px]" />
-          
+
           {/* Luzes decorativas de fundo */}
           <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none" />
           <div className="absolute bottom-12 right-12 h-80 w-80 rounded-full bg-blue-400/15 blur-3xl pointer-events-none" />
@@ -253,11 +261,11 @@ function LoginFormContent() {
               <PiggyBank className="h-4 w-4 text-emerald-400" />
               <span>Controle inteligente de gastos domésticos</span>
             </div>
-            
+
             <h1 className="text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
               Economize de verdade em cada ida ao supermercado.
             </h1>
-            
+
             <p className="text-base text-slate-200/90 leading-relaxed max-w-lg">
               Escaneie suas notas fiscais via QR Code, acompanhe o histórico detalhado de preços por produto e compare redes de supermercados com total transparência.
             </p>
