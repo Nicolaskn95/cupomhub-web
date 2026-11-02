@@ -16,6 +16,7 @@ type BottomNavItem = {
   href: string;
   label: string;
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  isCenterAction?: boolean;
 };
 
 export function BottomNav() {
@@ -27,9 +28,9 @@ export function BottomNav() {
 
   const items: BottomNavItem[] = useMemo(
     () => [
-      { href: "/", label: "Escanear", icon: QrCode },
       { href: "/notasfiscais", label: "Notas", icon: Receipt },
       { href: "/produtos", label: "Produtos", icon: Package },
+      { href: "/", label: "Escanear", icon: QrCode, isCenterAction: true },
       { href: "/financeiro", label: "Financeiro", icon: TrendingUp },
       { href: "/lista-compras", label: "Lista", icon: ClipboardList },
     ],
@@ -51,10 +52,44 @@ export function BottomNav() {
         paddingBottom: "max(0.5rem, env(safe-area-inset-bottom, 0.5rem))",
       }}
     >
-      <div className="max-w-lg mx-auto px-2 pt-1.5 flex items-center justify-around">
+      <div className="max-w-lg mx-auto px-2 pt-1.5 flex items-end justify-around">
         {items.map((item) => {
           const active = isActive(item.href);
           const IconComponent = item.icon;
+
+          if (item.isCenterAction) {
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-label={item.label}
+                className="relative flex flex-col items-center justify-center flex-1 -mt-6 group active:scale-95 transition-transform duration-200"
+              >
+                {/* Botão Central Flutuante em Destaque (FAB) - sem efeito de onda */}
+                <div
+                  className={`relative flex items-center justify-center w-14 h-14 rounded-full text-white ring-4 ring-white dark:ring-slate-950 transition-all duration-300 ${
+                    active ? "scale-105" : "group-hover:scale-105"
+                  }`}
+                  style={{
+                    background: `linear-gradient(135deg, ${secondaryColor}, ${primaryColor})`,
+                    boxShadow: active
+                      ? `0 8px 22px ${primaryColor}80`
+                      : `0 6px 16px ${primaryColor}55`,
+                  }}
+                >
+                  <IconComponent className="w-6 h-6 text-white relative z-10" />
+                </div>
+
+                {/* Label do Botão Central */}
+                <span
+                  className="text-[11px] font-bold tracking-tight mt-1 leading-tight transition-colors duration-200"
+                  style={{ color: active ? primaryColor : undefined }}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            );
+          }
 
           return (
             <Link
