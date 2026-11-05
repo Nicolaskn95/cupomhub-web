@@ -2,6 +2,7 @@
 
 import { Eye, EyeOff, Lock, Mail, ArrowRight, ShieldCheck, PiggyBank, CheckCircle } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
@@ -460,6 +461,17 @@ function LoginFormContent() {
               >
                 {isLogin ? "Criar conta" : "Fazer login"}
               </button>
+            </div>
+
+            {/* Links Legais (Política de Privacidade e Termos de Serviço) */}
+            <div className="mt-4 flex items-center justify-center gap-3 text-xs text-slate-400">
+              <Link href="/privacidade" className="hover:text-slate-600 hover:underline transition-colors">
+                Política de Privacidade
+              </Link>
+              <span>•</span>
+              <Link href="/termos" className="hover:text-slate-600 hover:underline transition-colors">
+                Termos de Serviço
+              </Link>
             </div>
           </div>
         </div>
