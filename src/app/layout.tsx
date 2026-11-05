@@ -36,6 +36,9 @@ export const metadata: Metadata = {
       { url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
+  verification: {
+    google: "PWQZQrpLxZLdNXzOs82MdU7erUkExF_1mi4VQip8w_o",
+  },
 };
 
 export default function RootLayout({
@@ -48,6 +51,7 @@ export default function RootLayout({
       <head>
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="google-site-verification" content="PWQZQrpLxZLdNXzOs82MdU7erUkExF_1mi4VQip8w_o" />
       </head>
       <body className={`${inter.className} antialiased`}>
         <PwaRegistration />
