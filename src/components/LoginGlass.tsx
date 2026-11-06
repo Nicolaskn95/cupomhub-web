@@ -117,7 +117,7 @@ function LoginFormContent() {
     if (!rememberReady) return;
     if (getAccessToken()) {
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("deolhonanota_just_logged_in", "1");
+        sessionStorage.setItem("cupomhub_just_logged_in", "1");
       }
       router.replace("/notasfiscais");
       return;
@@ -146,7 +146,7 @@ function LoginFormContent() {
       const data = await googleLoginRequest(tokenOrCredential, remember);
       persistSession(data, remember);
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("deolhonanota_just_logged_in", "1");
+        sessionStorage.setItem("cupomhub_just_logged_in", "1");
       }
       router.push("/notasfiscais");
     } catch (err) {
@@ -184,7 +184,7 @@ function LoginFormContent() {
       const data = await loginRequest(username.trim(), password, remember);
       persistSession(data, remember);
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("deolhonanota_just_logged_in", "1");
+        sessionStorage.setItem("cupomhub_just_logged_in", "1");
       }
       router.push("/notasfiscais");
     } catch (err) {
@@ -207,7 +207,7 @@ function LoginFormContent() {
       const data = await loginRequest(username.trim(), password, remember);
       persistSession(data, remember);
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("deolhonanota_just_logged_in", "1");
+        sessionStorage.setItem("cupomhub_just_logged_in", "1");
       }
       router.push("/notasfiscais");
     } catch (err) {
@@ -285,7 +285,7 @@ function LoginFormContent() {
 
           {/* Rodapé do Banner */}
           <div className="relative z-10 flex items-center justify-between text-xs text-slate-300/80 border-t border-white/10 pt-6">
-            <span>© 2026 De Olho Na Nota. Todos os direitos reservados.</span>
+            <span>© 2026 CupomHub. Todos os direitos reservados.</span>
             <span className="font-semibold text-emerald-400">Google Stitch Design Verified</span>
           </div>
         </div>
@@ -293,7 +293,7 @@ function LoginFormContent() {
         {/* LADO DIREITO: Painel de Autenticação (Com fundo Glassmorphism no Mobile) */}
         <div className="w-full lg:w-5/12 xl:w-2/5 flex flex-col justify-center p-4 sm:p-8 lg:p-12 xl:p-16 overflow-y-auto min-h-screen lg:min-h-0 bg-transparent lg:bg-white">
           <div className="w-full max-w-md mx-auto my-auto py-4 px-6 sm:px-8 lg:p-0 rounded-3xl border border-white/20 bg-white/95 backdrop-blur-xl shadow-2xl lg:shadow-none lg:border-none lg:bg-transparent">
-            {/* Header com a Marca De Olho Na Nota */}
+            {/* Header com a Marca CupomHub */}
             <div className="mb-6 text-left pt-2 lg:pt-0">
               <div className="flex items-center gap-3 mb-5">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1b6d24] text-white shadow-md shadow-emerald-900/10">
@@ -302,7 +302,7 @@ function LoginFormContent() {
                   </svg>
                 </div>
                 <div>
-                  <span className="text-xl font-extrabold text-[#002545] tracking-tight block">De Olho Na Nota</span>
+                  <span className="text-xl font-extrabold text-[#002545] tracking-tight block">CupomHub</span>
                   <span className="text-[11px] font-medium text-slate-500 block -mt-1">Gestão de Compras & Preços</span>
                 </div>
               </div>
@@ -448,7 +448,7 @@ function LoginFormContent() {
             <div className="mt-6 mb-2 p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between text-left">
               <div className="flex flex-col">
                 <span className="text-xs font-semibold text-slate-900">
-                  {isLogin ? "Novo no De Olho Na Nota?" : "Já possui uma conta?"}
+                  {isLogin ? "Novo no CupomHub?" : "Já possui uma conta?"}
                 </span>
                 <span className="text-[11px] text-slate-500">
                   {isLogin ? "Comece a economizar agora mesmo." : "Acesse o painel com seus dados."}

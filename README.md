@@ -1,4 +1,4 @@
-# De Olho na Nota - Front-end
+# CupomHub - Front-end
 
 Aplicacao web para gerenciamento de notas fiscais (NFC-e), com foco em organizacao de gastos por categoria, visualizacao de indicadores e apoio ao controle financeiro pessoal.
 
@@ -6,7 +6,7 @@ O front-end consome uma API dedicada para autenticacao, cadastro/processamento d
 
 ## Tecnologias utilizadas
 
-### Front-end (`de-olho-na-nota-web`)
+### Front-end (`cupomhub-web`)
 
 - Next.js 16
 - React 19
@@ -16,7 +16,7 @@ O front-end consome uma API dedicada para autenticacao, cadastro/processamento d
 - `@yudiel/react-qr-scanner` + `html5-qrcode` (leitura de QR Code de cupons)
 - Lucide React (icones)
 
-### Back-end (`de-olho-na-nota`)
+### Back-end (`cupomhub`)
 
 - NestJS 11
 - TypeScript
@@ -45,7 +45,7 @@ O front-end consome uma API dedicada para autenticacao, cadastro/processamento d
 
 ### 1) Back-end
 
-No repositorio `de-olho-na-nota`:
+No repositorio `cupomhub`:
 
 ```bash
 yarn install
@@ -56,7 +56,7 @@ Configure as variaveis de ambiente necessarias no back-end (principalmente `MONG
 
 ### 2) Front-end
 
-No repositorio `de-olho-na-nota-web`:
+No repositorio `cupomhub-web`:
 
 ```bash
 yarn install

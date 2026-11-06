@@ -1,5 +1,5 @@
-// Service Worker para De Olho na Nota (PWA)
-const CACHE_NAME = 'de-olho-na-nota-v1';
+// Service Worker para CupomHub (PWA)
+const CACHE_NAME = 'cupomhub-v1';
 
 const STATIC_ASSETS = [
   '/',

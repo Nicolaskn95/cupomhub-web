@@ -630,7 +630,7 @@ export function Produtos() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `produtos-de-olho-na-nota-${new Date().toISOString().split("T")[0]}.csv`;
+    a.download = `produtos-cupomhub-${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }, [produtosFiltrados]);
@@ -645,7 +645,7 @@ export function Produtos() {
     // Title
     doc.setFontSize(18);
     doc.setTextColor(16, 185, 129);
-    doc.text("De Olho na Nota - Relatório de Produtos", 14, 22);
+    doc.text("CupomHub - Relatório de Produtos", 14, 22);
 
     doc.setFontSize(10);
     doc.setTextColor(100);
@@ -696,7 +696,7 @@ export function Produtos() {
     });
 
     doc.save(
-      `produtos-de-olho-na-nota-${new Date().toISOString().split("T")[0]}.pdf`
+      `produtos-cupomhub-${new Date().toISOString().split("T")[0]}.pdf`
     );
   }, [produtosFiltrados, stats]);
 

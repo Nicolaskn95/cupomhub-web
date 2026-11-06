@@ -3,8 +3,8 @@ import Link from "next/link";
 import { FileText, ArrowLeft, CheckCircle2, AlertCircle, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Termos de Serviço - De Olho na Nota",
-  description: "Termos e Condições de Uso do aplicativo De Olho na Nota.",
+  title: "Termos de Serviço - CupomHub",
+  description: "Termos e Condições de Uso do aplicativo CupomHub.",
 };
 
 export default function TermosServicoPage() {
@@ -36,7 +36,7 @@ export default function TermosServicoPage() {
             <section>
               <h2 className="text-lg font-semibold text-slate-900 mb-2">1. Aceitação dos Termos</h2>
               <p>
-                Ao criar uma conta ou utilizar o aplicativo <strong>De Olho na Nota</strong>, você concorda com estes
+                Ao criar uma conta ou utilizar o aplicativo <strong>CupomHub</strong>, você concorda com estes
                 Termos de Serviço e com nossa Política de Privacidade. Caso não concorde com qualquer disposição,
                 solicitamos que não utilize a plataforma.
               </p>
@@ -48,7 +48,7 @@ export default function TermosServicoPage() {
                 2. Descrição do Serviço
               </h2>
               <p>
-                O <strong>De Olho na Nota</strong> é uma ferramenta de gestão financeira e controle pessoal de compras,
+                O <strong>CupomHub</strong> é uma ferramenta de gestão financeira e controle pessoal de compras,
                 permitindo a leitura de QR codes de notas fiscais de consumidor (NFC-e), conferência de itens, organização
                 por categorias e acompanhamento de preços e gastos.
               </p>
@@ -103,7 +103,7 @@ export default function TermosServicoPage() {
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-8">
-          © {new Date().getFullYear()} De Olho na Nota. Todos os direitos reservados.
+          © {new Date().getFullYear()} CupomHub. Todos os direitos reservados.
         </p>
       </div>
     </div>

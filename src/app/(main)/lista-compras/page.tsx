@@ -1,7 +1,7 @@
 import { ListaCompras } from "@/components/ListaCompras";
 
 export const metadata = {
-  title: "Lista de Compras | De Olho na Nota",
+  title: "Lista de Compras | CupomHub",
   description: "Gere sua lista de compras inteligente baseada no seu histórico de notas fiscais.",
 };
 

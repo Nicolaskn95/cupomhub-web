@@ -90,7 +90,7 @@ export function PwaRegistration() {
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
-            Instalar De Olho na Nota
+            Instalar CupomHub
           </p>
           <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
             Acesso rápido direto da sua tela inicial

@@ -926,7 +926,7 @@ export function EscanearCupom() {
           Scanner Inteligente
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
-          De Olho na Nota
+          CupomHub
         </h1>
         <p className="text-gray-600 text-sm mt-1 max-w-md mx-auto">
           Capture cupons fiscais em sequência ou individualmente e acompanhe o

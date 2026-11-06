@@ -47,14 +47,14 @@ export function MainNav() {
           <div className="w-8 h-8 rounded-xl bg-white/15 p-1 flex items-center justify-center border border-white/20 shadow-sm group-hover:scale-105 transition-transform">
             <Image
               src="/icons/icon-192x192.png"
-              alt="Logo De Olho na Nota"
+              alt="Logo CupomHub"
               width={28}
               height={28}
               className="rounded-lg object-contain"
             />
           </div>
           <span className="text-base sm:text-lg font-bold tracking-tight text-white drop-shadow-sm group-hover:opacity-90 transition-opacity">
-            De Olho na Nota
+            CupomHub
           </span>
         </Link>
 

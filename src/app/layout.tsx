@@ -17,13 +17,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "De Olho na Nota",
+  title: "CupomHub",
   description: "Escaneie QR codes de cupons fiscais, organize produtos e acompanhe seus gastos",
-  applicationName: "De Olho na Nota",
+  applicationName: "CupomHub",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "De Olho na Nota",
+    title: "CupomHub",
   },
   formatDetection: {
     telephone: false,

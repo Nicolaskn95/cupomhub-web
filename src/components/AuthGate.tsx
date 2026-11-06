@@ -84,14 +84,14 @@ export function AuthGate({ children }: { children: ReactNode }) {
         const isMobile = isMobileViewportOrDevice();
         const justLoggedIn =
           typeof window !== "undefined" &&
-          sessionStorage.getItem("deolhonanota_just_logged_in") === "1";
+          sessionStorage.getItem("cupomhub_just_logged_in") === "1";
         const alreadyShownDesktop =
           typeof window !== "undefined" &&
-          sessionStorage.getItem("deolhonanota_splash_shown") === "1";
+          sessionStorage.getItem("cupomhub_splash_shown") === "1";
 
         if (typeof window !== "undefined") {
-          sessionStorage.removeItem("deolhonanota_just_logged_in");
-          sessionStorage.setItem("deolhonanota_splash_shown", "1");
+          sessionStorage.removeItem("cupomhub_just_logged_in");
+          sessionStorage.setItem("cupomhub_splash_shown", "1");
         }
 
         // No mobile sempre exibe o splash screen ao entrar no sistema;

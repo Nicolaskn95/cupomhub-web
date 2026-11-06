@@ -11,7 +11,7 @@ export function SplashScreen({ fadingOut = false }: SplashScreenProps) {
     <div
       className={`splash-screen ${fadingOut ? "splash-screen--fade-out" : ""}`}
       role="status"
-      aria-label="Animação De Olho na Nota"
+      aria-label="Animação CupomHub"
     >
       <div className="scene">
         {/* Parte 1: Bolinhas com efeito Gooey */}

@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "De Olho na Nota",
-    short_name: "De Olho na Nota",
+    name: "CupomHub",
+    short_name: "CupomHub",
     description: "Aplicativo para leitura de notas fiscais, controle de gastos e lista de compras",
     start_url: "/",
     display: "standalone",

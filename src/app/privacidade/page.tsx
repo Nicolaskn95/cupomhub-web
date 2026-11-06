@@ -3,8 +3,8 @@ import Link from "next/link";
 import { ShieldCheck, ArrowLeft, Lock, Database, UserCheck, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Política de Privacidade - De Olho na Nota",
-  description: "Política de Privacidade e Proteção de Dados do aplicativo De Olho na Nota.",
+  title: "Política de Privacidade - CupomHub",
+  description: "Política de Privacidade e Proteção de Dados do aplicativo CupomHub.",
 };
 
 export default function PoliticaPrivacidadePage() {
@@ -38,7 +38,7 @@ export default function PoliticaPrivacidadePage() {
                 1. Visão Geral
               </h2>
               <p>
-                O aplicativo <strong>De Olho na Nota</strong> foi desenvolvido para ajudar você a organizar e acompanhar
+                O aplicativo <strong>CupomHub</strong> foi desenvolvido para ajudar você a organizar e acompanhar
                 seus gastos a partir da leitura e conferência de cupons e notas fiscais. Levamos a sua privacidade e a
                 segurança dos seus dados a sério, atuando em total conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)
                 e com as políticas de serviços de dados do Google.
@@ -130,7 +130,7 @@ export default function PoliticaPrivacidadePage() {
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-8">
-          © {new Date().getFullYear()} De Olho na Nota. Todos os direitos reservados.
+          © {new Date().getFullYear()} CupomHub. Todos os direitos reservados.
         </p>
       </div>
     </div>
