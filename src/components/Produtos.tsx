@@ -306,7 +306,11 @@ export function Produtos() {
         { total: number; count: number; ultimoPreco: number }
       >();
       for (const o of group) {
-        const key = o.nota.estabelecimento;
+        const key =
+          (o.nota as any).estabelecimentoOriginal ||
+          o.nota.estabelecimento ||
+          (o.nota as any).razaoSocial ||
+          "Supermercado";
         const existing = estabMap.get(key) || {
           total: 0,
           count: 0,
@@ -339,13 +343,20 @@ export function Produtos() {
       const mainName = nomesSanitizados[0] || "Produto sem nome";
       const cat = getCategoriaProduto(mainName, prefixos);
 
-      const comprasDoGrupo: HistoricoItemCompra[] = group.map((o) => ({
-        dataCompra: o.nota.dataEmissao,
-        estabelecimento: o.nota.estabelecimento || "Supermercado",
-        precoUnitario: o.produto.valorUnitario,
-        quantidade: o.produto.quantidade,
-        precoTotal: o.produto.valorTotal,
-      }));
+      const comprasDoGrupo: HistoricoItemCompra[] = group.map((o) => {
+        const estabNome =
+          (o.nota as any).estabelecimentoOriginal ||
+          o.nota.estabelecimento ||
+          (o.nota as any).razaoSocial ||
+          "Supermercado";
+        return {
+          dataCompra: o.nota.dataEmissao,
+          estabelecimento: estabNome,
+          precoUnitario: o.produto.valorUnitario,
+          quantidade: o.produto.quantidade,
+          precoTotal: o.produto.valorTotal,
+        };
+      });
 
       groups.push({
         nome: mainName,
@@ -469,11 +480,42 @@ export function Produtos() {
   }, [historicoComprasGrafico]);
 
   // ─── Price chart data for selected product ────────────────────
+  const PALETA_ESTAB = useMemo(
+    () => [
+      "#10b981", // verde esmeralda
+      "#3b82f6", // azul
+      "#f59e0b", // âmbar
+      "#8b5cf6", // roxo
+      "#ec4899", // rosa
+      "#06b6d4", // ciano
+      "#f97316", // laranja
+      "#14b8a6", // teal
+      "#6366f1", // índigo
+    ],
+    []
+  );
+
+  const mapaCoresEstabelecimentos = useMemo(() => {
+    const estabs = Array.from(
+      new Set(
+        historicoComprasGrafico.map((c) => c.estabelecimento || "Supermercado")
+      )
+    );
+    const mapa = new Map<string, string>();
+    estabs.forEach((est, idx) => {
+      mapa.set(est, PALETA_ESTAB[idx % PALETA_ESTAB.length]);
+    });
+    return mapa;
+  }, [historicoComprasGrafico, PALETA_ESTAB]);
+
   const chartData = useMemo(() => {
     if (!produtoSelecionado || historicoComprasGrafico.length === 0) return null;
 
     const labels = historicoComprasGrafico.map((c) => formatDate(c.dataCompra));
     const data = historicoComprasGrafico.map((c) => c.precoUnitario);
+    const pointColors = historicoComprasGrafico.map(
+      (c) => mapaCoresEstabelecimentos.get(c.estabelecimento || "Supermercado") || "#10b981"
+    );
 
     return {
       labels,
@@ -482,19 +524,19 @@ export function Produtos() {
           label: "Preço Unitário",
           data,
           borderColor: "#10b981",
-          backgroundColor: "rgba(16, 185, 129, 0.1)",
+          backgroundColor: "rgba(16, 185, 129, 0.08)",
           fill: true,
           tension: 0.25,
-          pointBackgroundColor: "#10b981",
+          pointBackgroundColor: pointColors,
           pointBorderColor: "#fff",
           pointBorderWidth: 2,
           pointRadius: 6,
           pointHoverRadius: 9,
-          pointHoverBackgroundColor: "#059669",
+          pointHoverBackgroundColor: pointColors,
         },
       ],
     };
-  }, [produtoSelecionado, historicoComprasGrafico]);
+  }, [produtoSelecionado, historicoComprasGrafico, mapaCoresEstabelecimentos]);
 
   // Chart options with click listener to display the purchase establishment
   const chartOptions = useMemo(() => {
@@ -958,9 +1000,18 @@ export function Produtos() {
                   </span>
                 )}
                 {produtoSelecionado.nomes.length > 1 && (
-                  <p className="text-xs text-gray-400 mt-1">
-                    Variações agrupadas: {produtoSelecionado.nomes.join(", ")}
-                  </p>
+                  <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                    <span className="text-xs text-gray-500 font-medium">Variações agrupadas:</span>
+                    {produtoSelecionado.nomes.map((nome, nIdx) => (
+                      <span
+                        key={nIdx}
+                        className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono bg-emerald-50 text-emerald-800 border border-emerald-200"
+                        title="Nome fiscal unificado sob este mesmo produto"
+                      >
+                        {nome}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </div>
               <button
@@ -1032,6 +1083,24 @@ export function Produtos() {
                   {historicoComprasGrafico.length} registro(s) no período
                 </span>
               </div>
+
+              {mapaCoresEstabelecimentos.size > 1 && (
+                <div className="flex flex-wrap items-center gap-2 mb-3.5 px-1 py-1.5 bg-gray-50/80 rounded-lg border border-gray-100">
+                  <span className="text-xs text-gray-500 font-medium">Mercados no gráfico:</span>
+                  {Array.from(mapaCoresEstabelecimentos.entries()).map(([estab, cor]) => (
+                    <span
+                      key={estab}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold text-gray-700 bg-white border border-gray-200 shadow-2xs"
+                    >
+                      <span
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: cor }}
+                      />
+                      {estab}
+                    </span>
+                  ))}
+                </div>
+              )}
 
               <div className="h-64">
                 <Line data={chartData} options={chartOptions} />

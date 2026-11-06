@@ -1462,9 +1462,16 @@ export function ListaCompras() {
                             className="flex flex-col sm:flex-row items-end sm:items-center gap-0.5 sm:gap-3 text-xs sm:text-base shrink-0 text-gray-600 item-text ml-2 sm:ml-4 select-none cursor-pointer self-start sm:self-center pt-1 sm:pt-0"
                             onClick={() => toggleItem(index)}
                           >
-                            <span className="text-right font-medium whitespace-nowrap">
-                              {item.quantidade} {item.unidade}
-                            </span>
+                            <div className="flex flex-col items-end">
+                              <span className="text-right font-medium whitespace-nowrap">
+                                {item.quantidade} {item.unidade}
+                              </span>
+                              {Boolean(item.pesoEstimadoKg && item.unidade === "UN") && (
+                                <span className="text-[10px] sm:text-xs text-emerald-700 font-semibold whitespace-nowrap bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200 mt-0.5" title="Cálculo baseado no peso estimado em kg no mercado">
+                                  ~{item.pesoEstimadoKg! < 1 ? `${Math.round(item.pesoEstimadoKg! * 1000)}g` : `${item.pesoEstimadoKg!.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} kg`}
+                                </span>
+                              )}
+                            </div>
                             <span className="min-w-[3.5rem] sm:min-w-[5rem] text-right font-semibold whitespace-nowrap text-gray-800">
                               {item.valorEstimado > 0
                                 ? formatCurrency(item.valorEstimado)
