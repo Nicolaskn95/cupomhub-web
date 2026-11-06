@@ -132,8 +132,8 @@ flowchart TD
 | **RF-009** | Escaneamento de Cupom via Câmera | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar` | `POST` | Aciona a webcam ou câmera móvel para leitura ao vivo do QR Code impresso no cupom e submete a URL para extração. |
 | **RF-010** | Leitura de Imagem do Cupom | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar` | `POST` | Permite o upload de arquivos de imagem locais contendo o QR Code do cupom, decodificando o texto via `html5-qrcode` e processando. |
 | **RF-011** | Inserção Manual de Link NFC-e | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar` | `POST` | Recebe a URL da consulta pública da nota digitada ou colada pelo usuário e efetua requisição HTTP com parsing de DOM via Cheerio. |
-| **RF-012** | Consulta Pública por Chave de Acesso | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar-chave` | `POST` | Recebe a chave de 44 dígitos, acessa a SEFAZ-SP, obtém tokens de sessão ASP.NET, baixa e soluciona o CAPTCHA via OCR e extrai os itens da nota. |
-| **RF-013** | Retry e Tolerância a Falha de CAPTCHA | N/A (Execução Backend) | `/notas-fiscais/processar-chave` | `POST` | Em caso de OCR impreciso ou rejeição do código pelo servidor da fazenda, repete o ciclo de recuperação de imagem e OCR por até 3 vezes. |
+| **RF-012** | Consulta Pública por Chave de Acesso (Descontinuado) | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar-chave` | `POST` | *Descontinuado pela SEFAZ.* Recebia a chave de 44 dígitos para extração com resolução de CAPTCHA. O fluxo foi centralizado na leitura de QR Code. |
+| **RF-013** | Retry e Tolerância a Falha de CAPTCHA (Descontinuado) | N/A (Execução Backend) | `/notas-fiscais/processar-chave` | `POST` | *Descontinuado.* Em caso de OCR impreciso ou rejeição do código pelo servidor da fazenda, repetia o ciclo de recuperação de imagem e OCR por até 3 vezes. |
 | **RF-014** | Prevenção de Duplicidade de Notas | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar*` | `POST` | Bloqueia a inserção da mesma nota fiscal para o mesmo usuário através do índice composto único `{ chaveAcesso: 1, userId: 1 }`. |
 
 ---
