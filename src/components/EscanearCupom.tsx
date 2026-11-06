@@ -1797,7 +1797,7 @@ export function EscanearCupom() {
       )}
 
       {/* ═══════════════════════════════════════════════════════ */}
-      {/* MODO: Processamento em Lote Manual (URLs / Chaves)     */}
+      {/* MODO: Processamento em Lote Manual (URLs)             */}
       {/* ═══════════════════════════════════════════════════════ */}
       {modo === 'lote-manual' && (
         <div className="p-6 bg-indigo-50/70 border border-indigo-200 rounded-2xl shadow-sm animate-fadeIn">

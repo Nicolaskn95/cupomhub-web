@@ -9,7 +9,7 @@ O **De Olho na Nota** é uma solução completa de controle financeiro pessoal, 
 
 A aplicação opera através de dois repositórios complementares:
 1. **Backend (`de-olho-na-nota`)**: Uma API REST modular desenvolvida em **NestJS** e **MongoDB (Mongoose)**, responsável pelo processamento assíncrono de notas fiscais, web scraping de portais estaduais da SEFAZ, quebra automatizada de CAPTCHA via OCR/Visão Computacional, categorização inteligente com LLM (**Qwen 2.5 72B via OpenRouter**) e algoritmos determinísticos de consumo e lista de compras.
-2. **Frontend (`de-olho-na-nota-web`)**: Uma aplicação web moderna e responsiva construída em **Next.js 16 (App Router)** e **Tailwind CSS v4**, dotada de leitor de QR Code/Código de Barras em tempo real, dashboards analíticos com gráficos empilhados e de evolução temporal, gestão de apelidos (de-para), visualização interativa em estilo caderno de notas e exportação de relatórios em PDF e CSV.
+2. **Frontend (`de-olho-na-nota-web`)**: Uma aplicação web moderna e responsiva construída em **Next.js 16 (App Router)** e **Tailwind CSS v4**, dotada de leitor de QR Code em tempo real, dashboards analíticos com gráficos empilhados e de evolução temporal, gestão de apelidos (de-para), visualização interativa em estilo caderno de notas e exportação de relatórios em PDF e CSV.
 
 ---
 
@@ -47,7 +47,7 @@ A aplicação opera através de dois repositórios complementares:
 flowchart TD
     subgraph Frontend["Frontend Client — Next.js 16 (App Router)"]
         UI["Interface de Usuário (React 19 + Tailwind CSS 4)"]
-        Scanner["Scanner QR / Barcode (html5-qrcode & yudiel-scanner)"]
+        Scanner["Scanner QR Code (html5-qrcode & yudiel-scanner)"]
         Charts["Visualizações Chart.js (Stacked Bar / Line Evolution)"]
         Reports["Exportação Client-Side (jsPDF & CSV Generator)"]
         Storage["Armazenamento Local (localStorage — Cache & Sync Lote)"]
