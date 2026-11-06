@@ -217,36 +217,52 @@ export function EscanearCupom() {
   const passosTour = useMemo<Step[]>(
     () => [
       {
+        target: '[data-tour="toggle-continuo"]',
+        content:
+          'Com o Modo Contínuo ativado, você pode escanear vários cupons em sequência sem precisar fechar a câmera!',
+        placement: 'bottom',
+        disableBeacon: true,
+        skipBeacon: true,
+      },
+      {
         target: '[data-tour="modos-escanear"]',
         content:
           'Aqui você escolhe como quer capturar o cupom: câmera, foto, URL manual ou chave de acesso.',
         placement: 'bottom',
         disableBeacon: true,
-      },
-      {
-        target: '[data-tour="toggle-continuo"]',
-        content:
-          'Com o Modo Contínuo ativado, você pode escanear vários cupons em sequência sem precisar fechar a câmera!',
+        skipBeacon: true,
       },
       {
         target: '[data-tour="modo-camera"]',
         content:
           'Câmera: leitura ao vivo de QR code e também do código de barras da chave de acesso.',
+        placement: 'bottom',
+        disableBeacon: true,
+        skipBeacon: true,
       },
       {
         target: '[data-tour="modo-imagem"]',
         content:
           'Enviar foto: use uma imagem salva que já contenha o QR code do cupom fiscal.',
+        placement: 'bottom',
+        disableBeacon: true,
+        skipBeacon: true,
       },
       {
         target: '[data-tour="modo-url"]',
         content:
           'URL manual: cole o link da NFC-e quando preferir ou não conseguir escanear.',
+        placement: 'top',
+        disableBeacon: true,
+        skipBeacon: true,
       },
       {
         target: '[data-tour="modo-chave"]',
         content:
           'Código de barras: consulte pela chave de acesso numérica com 44 dígitos.',
+        placement: 'top',
+        disableBeacon: true,
+        skipBeacon: true,
       },
     ],
     [],
@@ -274,12 +290,15 @@ export function EscanearCupom() {
       setTimeout(() => {
         setPassoTour(0)
         setRodandoTour(true)
-      }, 0)
+      }, 50)
       return
     }
 
-    setPassoTour(0)
-    setRodandoTour(true)
+    setRodandoTour(false)
+    setTimeout(() => {
+      setPassoTour(0)
+      setRodandoTour(true)
+    }, 20)
   }
 
   const onJoyrideCallback = (data: EventData) => {
@@ -913,7 +932,8 @@ export function EscanearCupom() {
         options={{
           buttons: ['back', 'close', 'primary', 'skip'],
           primaryColor: '#166534',
-          skipScroll: true,
+          skipBeacon: true,
+          scrollOffset: 70,
           zIndex: 10000,
         }}
       />
