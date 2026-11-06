@@ -3,7 +3,7 @@ const API_BASE =
     ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")
     : "http://localhost:3001";
 
-export type AuthUser = { id: string; username: string };
+export type AuthUser = { id: string; username: string; email?: string | null };
 
 export type LoginResponse = {
   accessToken: string;
@@ -106,18 +106,24 @@ export async function unlinkGoogleRequest(): Promise<{ ok: boolean }> {
 }
 
 export async function registerRequest(
-  username: string,
+  identifier: string,
   password: string,
-): Promise<{ id: string; username: string }> {
+): Promise<{ id: string; username: string; email?: string }> {
+  const clean = identifier.trim();
+  const isEmail = clean.includes("@");
+  const payload = isEmail
+    ? { email: clean.toLowerCase(), password }
+    : { username: clean, password };
+
   const res = await fetch(`${API_BASE}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify(payload),
   });
   if (!res.ok) {
     throw new Error(await readErrorMessage(res));
   }
-  return res.json() as Promise<{ id: string; username: string }>;
+  return res.json() as Promise<{ id: string; username: string; email?: string }>;
 }
 
 function normalizeToken(token: string | null): string | null {
