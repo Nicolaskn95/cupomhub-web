@@ -197,14 +197,19 @@ function LoginFormContent() {
   async function onRegister(e: FormEvent) {
     e.preventDefault();
     setError(null);
+    const cleanEmail = username.trim().toLowerCase();
+    if (!cleanEmail.includes("@") || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      setError("Por favor, informe um endereço de e-mail válido");
+      return;
+    }
     if (password !== confirmPassword) {
       setError("As senhas não coincidem");
       return;
     }
     setLoading(true);
     try {
-      await registerRequest(username.trim(), password);
-      const data = await loginRequest(username.trim(), password, remember);
+      await registerRequest(cleanEmail, password);
+      const data = await loginRequest(cleanEmail, password, remember);
       persistSession(data, remember);
       if (typeof window !== "undefined") {
         sessionStorage.setItem("cupomhub_just_logged_in", "1");
@@ -313,7 +318,7 @@ function LoginFormContent() {
               <p className="text-xs sm:text-sm text-slate-500">
                 {isLogin
                   ? "Acesse sua conta para gerenciar seus cupons e listas."
-                  : "Comece a controlar seus gastos no supermercado hoje mesmo."}
+                  : "Cadastre-se com seu e-mail para começar a economizar."}
               </p>
             </div>
 
@@ -341,16 +346,20 @@ function LoginFormContent() {
             <form onSubmit={isLogin ? onLogin : onRegister} className="space-y-3.5">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  E-mail ou Usuário
+                  {isLogin ? "E-mail ou Usuário" : "E-mail"}
                 </label>
                 <div className="relative rounded-xl border border-slate-200 bg-slate-50/70 shadow-sm transition-all focus-within:border-[#1b6d24] focus-within:bg-white focus-within:ring-2 focus-within:ring-emerald-600/10">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <Mail className="h-4 w-4" />
                   </div>
                   <input
-                    type="text"
+                    type={isLogin ? "text" : "email"}
                     required
-                    placeholder="seu.email@exemplo.com"
+                    placeholder={
+                      isLogin
+                        ? "seu.email@exemplo.com ou usuário"
+                        : "seu.email@exemplo.com"
+                    }
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="block w-full pl-10 pr-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 bg-transparent rounded-xl focus:outline-none"
