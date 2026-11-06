@@ -26,9 +26,9 @@ export function SplashScreen({ fadingOut = false }: SplashScreenProps) {
           <div className="macbook__topBord">
             <div className="macbook__display">
               <span className="screen-text">
-                De olho
+                Cupom
                 <br />
-                na nota
+                Hub
               </span>
               <div className="macbook__load"></div>
             </div>
