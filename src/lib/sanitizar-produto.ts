@@ -37,9 +37,70 @@ const STOP_WORDS = new Set([
   'AOS',
 ])
 
+export const EXPANSOES_ABREVIACOES_FISCAIS: Array<[RegExp, string]> = [
+  [/\bMUSC\b|\bMUSCL\b/g, 'MUSCULO'],
+  [/\bMAC\b|\bMACARR\b/g, 'MACARRAO'],
+  [/\bPEN\b/g, 'PENNE'],
+  [/\bESPAG\w*\b/g, 'ESPAGUETE'],
+  [/\bPARAF\w*\b/g, 'PARAFUSO'],
+  [/\bMOID\w*\b/g, 'MOIDA'],
+  [/\bBOV\w*\b/g, 'BOVINA'],
+  [/\bSUIN\w*\b/g, 'SUINA'],
+  [/\bFGO\b|\bFRG\b/g, 'FRANGO'],
+  [/\bQJO\b|\bQJ\b/g, 'QUEIJO'],
+  [/\bMUSS\w*\b|\bMUCAR\w*\b/g, 'MUSSARELA'],
+  [/\bREQ\w*\b/g, 'REQUEIJAO'],
+  [/\bBISC\b|\bBOL\b/g, 'BISCOITO'],
+  [/\bREFR\w*\b|\bREF\b/g, 'REFRIGERANTE'],
+  [/\bDET\b/g, 'DETERGENTE'],
+  [/\bDESINF\w*\b|\bDES\b/g, 'DESINFETANTE'],
+  [/\bSAB\b/g, 'SABONETE'],
+  [/\bLIMP\b/g, 'LIMPADOR'],
+  [/\bAG\s+SANIT\w*\b|\bAGUA\s+SANIT\w*\b/g, 'AGUA SANITARIA'],
+  [/\bCR\s+LEITE\b/g, 'CREME DE LEITE'],
+  [/\bLEITE\s+COND\w*\b/g, 'LEITE CONDENSADO'],
+  [/\bMOL\s+TOM\w*\b/g, 'MOLHO DE TOMATE'],
+  [/\bEXT\s+TOM\w*\b/g, 'EXTRATO DE TOMATE'],
+  [/\bAZ\b/g, 'AZEITE'],
+  [/\bOLIV\w*\b/g, 'OLIVA'],
+  [/\bMARG\w*\b/g, 'MARGARINA'],
+  [/\bMANT\w*\b/g, 'MANTEIGA'],
+  [/\bACUC\w*\b/g, 'ACUCAR'],
+  [/\bFAR\s+TRIG\w*\b/g, 'FARINHA DE TRIGO'],
+  [/\bFAR\s+MAND\w*\b|\bFAR\s+MA\b/g, 'FARINHA DE MANDIOCA'],
+  [/\bFAR\b/g, 'FARINHA'],
+  [/\bPAP\s+HIG\w*\b/g, 'PAPEL HIGIENICO'],
+  [/\bPAP\s+TOAL\w*\b|\bTOAL\s+PAP\w*\b/g, 'PAPEL TOALHA'],
+  [/\bGUARD\w*\b/g, 'GUARDANAPO'],
+  [/\bLING\b/g, 'LINGUICA'],
+  [/\bCALAB\w*\b/g, 'CALABRESA'],
+  [/\bSARD\w*\b/g, 'SARDINHA'],
+  [/\bMAION\w*\b/g, 'MAIONESE'],
+  [/\bABOB\w*\b/g, 'ABOBRINHA'],
+  [/\bCEN\b|\bCENOUR\w*\b/g, 'CENOURA'],
+  [/\bBAT\b|\bBATAT\w*\b/g, 'BATATA'],
+  [/\bTOM\b|\bTOMAT\w*\b/g, 'TOMATE'],
+  [/\bCEB\b|\bCEBOL\w*\b/g, 'CEBOLA'],
+  [/\bALF\b|\bALFAC\w*\b/g, 'ALFACE'],
+  [/\bPRES\b|\bPRESUNT\w*\b/g, 'PRESUNTO'],
+]
+
 export function normalizarEspacos(texto: string): string {
   if (typeof texto !== 'string') return ''
   return texto.replace(/\s+/g, ' ').trim()
+}
+
+export function removerAcentos(texto: string): string {
+  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+}
+
+export function expandirAbreviacoesFiscais(texto: string): string {
+  if (!texto) return ''
+  let expandido = removerAcentos(texto.toUpperCase())
+  for (const [regex, expansao] of EXPANSOES_ABREVIACOES_FISCAIS) {
+    expandido = expandido.replace(regex, expansao)
+  }
+  return normalizarEspacos(expandido)
 }
 
 export function sanitizarDescricaoProduto(descricao: string): string {
@@ -90,10 +151,6 @@ export function isEanValido(ean?: string | null): boolean {
   return true
 }
 
-export function removerAcentos(texto: string): string {
-  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-}
-
 export function gerarChaveCanonica(
   codigo?: string | null,
   nomeOuDescricao?: string | null,
@@ -107,7 +164,8 @@ export function gerarChaveCanonica(
     return 'CANON_DESCONHECIDO'
   }
 
-  const semAcentos = removerAcentos(nomeSanitizado.toUpperCase())
+  const desabreviado = expandirAbreviacoesFiscais(nomeSanitizado)
+  const semAcentos = removerAcentos(desabreviado.toUpperCase())
 
   const tokens = semAcentos
     .split(/[^A-Z0-9]+/)
@@ -119,5 +177,6 @@ export function gerarChaveCanonica(
   }
 
   const tokensOrdenados = Array.from(new Set(tokens)).sort()
+
   return `CANON_${tokensOrdenados.join('_')}`
 }

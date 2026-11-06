@@ -35,6 +35,7 @@ export interface ItemLista {
   estabelecimentoOrigem?: string | null
   quantidade: number
   unidade: string
+  pesoEstimadoKg?: number
   valorEstimado: number
   valorUnitarioRecente: number
   frequencia: number
