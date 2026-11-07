@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { PwaRegistration } from "@/components/PwaRegistration";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -50,6 +51,17 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
+        <Script
+          src="https://www.googletagmanager.com/gtm.js?id=GTM-KWQ2XCGB"
+          strategy="afterInteractive"
+        />
+        <Script id="google-tag-manager" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+          `}
+        </Script>
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="google-site-verification" content="PWQZQrpLxZLdNXzOs82MdU7erUkExF_1mi4VQip8w_o" />
