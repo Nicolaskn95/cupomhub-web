@@ -1123,88 +1123,86 @@ a.bg-green-800:hover {
 }
 
 /* ── Tela de Login: textura do painel de autenticação ── */
-/* Mobile: textura branca → ciano/roxo com grade vertical */
+/* Equivalente ao "body" da textura (painel direito no desktop / tela toda no mobile) */
 .login-texture {
+  margin: 0;
+  min-height: 100vh;
   background: linear-gradient(
-      to bottom,
-      #fff 0%,
-      #fff 40%,
-      rgba(255, 255, 255, 0) 100%
-    ),
-    linear-gradient(to right, #0ed2da, #5f29c7);
-  position: relative;
+    135deg,
+    #ffe8f3,
+    #d9f3ff
+  ); /* Soft pastel gradient background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
+  position: relative;
 }
 
-.login-texture::before {
-  content: "";
+/* Equivalente ao ".container" da textura */
+.login-texture-layer {
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(90deg, #ccc 1px, transparent 1px);
-  background-size: 50px 100%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   pointer-events: none;
-  mask-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0) 70%
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0) 70%
+  z-index: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2),
+    rgba(0, 0, 0, 0.1)
   );
 }
 
-/* Desktop: textura pastel com camadas cônicas rotativas (lado direito) */
-@media (min-width: 1024px) {
-  .login-texture {
-    background: linear-gradient(135deg, #ffe8f3, #d9f3ff);
-  }
-
-  .login-texture::before,
-  .login-texture::after {
-    content: "";
-    position: absolute;
-    inset: auto;
-    top: 50%;
-    left: 50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(
-      from 0deg,
-      #ff9aa2,
-      #ffb7b2,
-      #ffdac1,
-      #e2f0cb,
-      #a2e4ff,
-      #c9afff,
-      #ffb7b2,
-      #ff9aa2
-    );
-    background-size: auto;
-    mask-image: none;
-    -webkit-mask-image: none;
-    transform: translate(-50%, -50%);
-    animation: login-rotate 8s linear infinite;
-    filter: blur(50px);
-    opacity: 0.8;
-    pointer-events: none;
-  }
-
-  .login-texture::after {
-    width: 180%;
-    height: 180%;
-    animation: login-rotate-reverse 10s linear infinite;
-    opacity: 0.6;
-  }
+.login-texture-layer::before,
+.login-texture-layer::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    #ff9aa2,
+    /* Soft pink */ #ffb7b2,
+    /* Light peach */ #ffdac1,
+    /* Pastel yellow */ #e2f0cb,
+    /* Mint green */ #a2e4ff,
+    /* Baby blue */ #c9afff,
+    /* Lavender */ #ffb7b2,
+    #ff9aa2
+  );
+  transform: translate(-50%, -50%);
+  animation: login-rotate 8s linear infinite;
+  filter: blur(50px); /* Create a soft glowing effect */
+  opacity: 0.8;
 }
 
+/* Secondary rotating layer for depth */
+.login-texture-layer::after {
+  width: 180%;
+  height: 180%;
+  animation: login-rotate-reverse 10s linear infinite;
+  opacity: 0.6;
+}
+
+/* Rotating animations */
 @keyframes login-rotate {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 @keyframes login-rotate-reverse {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(-360deg); }
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
 }

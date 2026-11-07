@@ -21,7 +21,35 @@ const GOOGLE_CLIENT_ID =
 
 type Mode = "login" | "register";
 
-function GoogleButtonContent({ onClick, loading }: { onClick: () => void; loading: boolean }) {
+function GoogleButtonContent({
+  onClick,
+  loading,
+  variant = "full",
+}: {
+  onClick: () => void;
+  loading: boolean;
+  variant?: "full" | "icon";
+}) {
+  if (variant === "icon") {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={loading}
+        title="Entrar com Google"
+        aria-label="Entrar com Google"
+        className="flex h-14 w-14 items-center justify-center rounded-full border border-white/80 bg-white/80 backdrop-blur-md shadow-[0_0_22px_rgba(66,133,244,0.35)] transition-all hover:scale-105 hover:shadow-[0_0_28px_rgba(66,133,244,0.5)] active:scale-95 disabled:opacity-60 cursor-pointer"
+      >
+        <svg className="h-6 w-6" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+        </svg>
+      </button>
+    );
+  }
+
   return (
     <button
       type="button"
@@ -62,10 +90,12 @@ function CustomGoogleLoginButton({
   onSuccess,
   onError,
   loading,
+  variant = "full",
 }: {
   onSuccess: (idToken: string) => void;
   onError: (err: string) => void;
   loading: boolean;
+  variant?: "full" | "icon";
 }) {
   // Configuração do login via Google OAuth Popup
   const handleGoogleLogin = useGoogleLogin({
@@ -91,7 +121,7 @@ function CustomGoogleLoginButton({
     },
   });
 
-  return <GoogleButtonContent onClick={() => handleGoogleLogin()} loading={loading} />;
+  return <GoogleButtonContent onClick={() => handleGoogleLogin()} loading={loading} variant={variant} />;
 }
 
 function LoginFormContent() {
@@ -284,33 +314,34 @@ function LoginFormContent() {
 
         {/* LADO DIREITO: Painel de Autenticação (textura no lugar do fundo branco) */}
         <div className="login-texture relative w-full lg:w-5/12 xl:w-2/5 flex flex-col justify-center p-6 sm:p-8 lg:p-12 xl:p-16 overflow-y-auto overflow-x-hidden min-h-screen lg:min-h-0">
+          <div className="login-texture-layer" aria-hidden="true" />
           <div className="relative z-10 w-full max-w-md mx-auto my-auto py-4">
             {/* Header com a Marca CupomHub */}
-            <div className="mb-6 text-left pt-2 lg:pt-0">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1b6d24] text-white shadow-md shadow-emerald-900/10">
+            <div className="mb-7 lg:mb-6 text-center lg:text-left pt-2 lg:pt-0">
+              <div className="flex items-center justify-center lg:justify-start gap-3 mb-6 lg:mb-5">
+                <div className="flex h-14 w-14 lg:h-12 lg:w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 lg:bg-none lg:bg-[#1b6d24] text-white shadow-[0_0_28px_rgba(16,185,129,0.45)] lg:shadow-md lg:shadow-emerald-900/10">
                   <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
                   </svg>
                 </div>
-                <div>
-                  <span className="text-xl font-extrabold text-[#002545] tracking-tight block">CupomHub</span>
+                <div className="text-left">
+                  <span className="text-2xl lg:text-xl font-extrabold text-[#002545] tracking-tight block">CupomHub</span>
                   <span className="text-[11px] font-medium text-slate-500 block -mt-1">Gestão de Compras & Preços</span>
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-slate-900 tracking-tight mb-1.5">
+              <h2 className="text-[26px] lg:text-2xl font-bold text-slate-900 tracking-tight mb-1.5">
                 {isLogin ? "Bem-vindo de volta" : "Crie sua conta"}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500">
+              <p className="text-sm text-slate-600 lg:text-slate-500 max-w-[280px] lg:max-w-none mx-auto lg:mx-0">
                 {isLogin
                   ? "Acesse sua conta para gerenciar seus cupons e listas."
                   : "Cadastre-se com seu e-mail para começar a economizar."}
               </p>
             </div>
 
-            {/* Botão de Autenticação Google SSO */}
-            <div className="mb-5">
+            {/* Botão de Autenticação Google SSO (desktop) */}
+            <div className="hidden lg:block mb-5">
               <CustomGoogleLoginButton
                 onSuccess={handleGoogleSuccess}
                 onError={(msg) => {
@@ -322,7 +353,7 @@ function LoginFormContent() {
             </div>
 
             {/* Divisor Elegante */}
-            <div className="my-6 flex items-center gap-3">
+            <div className="hidden lg:flex my-6 items-center gap-3">
               <div className="flex-1 h-px bg-slate-300/70" />
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 {isLogin ? "ou entre com seu e-mail" : "ou cadastre-se com seu e-mail"}
@@ -336,7 +367,7 @@ function LoginFormContent() {
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   {isLogin ? "E-mail ou Usuário" : "E-mail"}
                 </label>
-                <div className="relative rounded-xl border border-slate-200 bg-white/80 shadow-sm transition-all focus-within:border-[#1b6d24] focus-within:bg-white focus-within:ring-2 focus-within:ring-emerald-600/10">
+                <div className="relative rounded-2xl lg:rounded-xl border border-white/80 lg:border-slate-200 bg-white/60 lg:bg-white/80 backdrop-blur-md shadow-sm transition-all focus-within:border-[#1b6d24] focus-within:bg-white focus-within:ring-2 focus-within:ring-emerald-600/10">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <Mail className="h-4 w-4" />
                   </div>
@@ -350,7 +381,7 @@ function LoginFormContent() {
                     }
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="block w-full pl-10 pr-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 bg-transparent rounded-xl focus:outline-none"
+                    className="block w-full pl-10 pr-4 py-3.5 lg:py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 bg-transparent rounded-2xl lg:rounded-xl focus:outline-none"
                   />
                 </div>
               </div>
@@ -359,7 +390,7 @@ function LoginFormContent() {
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Senha
                 </label>
-                <div className="relative rounded-xl border border-slate-200 bg-white/80 shadow-sm transition-all focus-within:border-[#1b6d24] focus-within:bg-white focus-within:ring-2 focus-within:ring-emerald-600/10">
+                <div className="relative rounded-2xl lg:rounded-xl border border-white/80 lg:border-slate-200 bg-white/60 lg:bg-white/80 backdrop-blur-md shadow-sm transition-all focus-within:border-[#1b6d24] focus-within:bg-white focus-within:ring-2 focus-within:ring-emerald-600/10">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <Lock className="h-4 w-4" />
                   </div>
@@ -369,7 +400,7 @@ function LoginFormContent() {
                     placeholder="••••••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 pr-11 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 bg-transparent rounded-xl focus:outline-none"
+                    className="block w-full pl-10 pr-11 py-3.5 lg:py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 bg-transparent rounded-2xl lg:rounded-xl focus:outline-none"
                   />
                   <button
                     type="button"
@@ -386,7 +417,7 @@ function LoginFormContent() {
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Confirmar Senha
                   </label>
-                  <div className="relative rounded-xl border border-slate-200 bg-white/80 shadow-sm transition-all focus-within:border-[#1b6d24] focus-within:bg-white focus-within:ring-2 focus-within:ring-emerald-600/10">
+                  <div className="relative rounded-2xl lg:rounded-xl border border-white/80 lg:border-slate-200 bg-white/60 lg:bg-white/80 backdrop-blur-md shadow-sm transition-all focus-within:border-[#1b6d24] focus-within:bg-white focus-within:ring-2 focus-within:ring-emerald-600/10">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                       <Lock className="h-4 w-4" />
                     </div>
@@ -396,7 +427,7 @@ function LoginFormContent() {
                       placeholder="••••••••••••"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="block w-full pl-10 pr-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 bg-transparent rounded-xl focus:outline-none"
+                      className="block w-full pl-10 pr-4 py-3.5 lg:py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 bg-transparent rounded-2xl lg:rounded-xl focus:outline-none"
                     />
                   </div>
                 </div>
@@ -447,7 +478,7 @@ function LoginFormContent() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 h-11 sm:h-12 px-6 rounded-xl bg-[#1b6d24] text-white font-semibold text-xs sm:text-sm shadow-md hover:bg-[#15571d] hover:shadow-lg transition-all duration-200 active:scale-[0.99] disabled:opacity-60 cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 h-13 lg:h-12 px-6 rounded-2xl lg:rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 lg:bg-none lg:bg-[#1b6d24] text-white font-bold lg:font-semibold text-base lg:text-sm shadow-[0_8px_28px_rgba(22,163,74,0.45)] lg:shadow-md hover:brightness-105 lg:hover:bg-[#15571d] hover:shadow-lg transition-all duration-200 active:scale-[0.99] disabled:opacity-60 cursor-pointer"
                 >
                   <span>{loading ? "Autenticando..." : isLogin ? "Entrar na Conta" : "Criar Conta"}</span>
                   <ArrowRight className="h-4 w-4" />
@@ -455,8 +486,40 @@ function LoginFormContent() {
               </div>
             </form>
 
-            {/* Chamada para Cadastro (Card de rodapé do Stitch) */}
-            <div className="mt-6 mb-2 p-3.5 rounded-2xl bg-white/75 backdrop-blur-md border border-white/70 flex items-center justify-between text-left">
+            {/* Mobile: login externo (somente Google) */}
+            <div className="lg:hidden">
+              <div className="my-7 flex items-center gap-3">
+                <div className="flex-1 h-px bg-slate-400/40" />
+                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest whitespace-nowrap">
+                  ou entre com
+                </span>
+                <div className="flex-1 h-px bg-slate-400/40" />
+              </div>
+              <div className="flex justify-center">
+                <CustomGoogleLoginButton
+                  variant="icon"
+                  onSuccess={handleGoogleSuccess}
+                  onError={(msg) => {
+                    triggerNativeGooglePrompt();
+                    setError(msg);
+                  }}
+                  loading={loading}
+                />
+              </div>
+              <p className="mt-7 text-center text-sm text-slate-700">
+                {isLogin ? "Novo no CupomHub?" : "Já possui uma conta?"}{" "}
+                <button
+                  type="button"
+                  onClick={toggleMode}
+                  className="font-bold text-[#1b6d24] hover:underline cursor-pointer"
+                >
+                  {isLogin ? "Criar conta" : "Fazer login"}
+                </button>
+              </p>
+            </div>
+
+            {/* Chamada para Cadastro (Card de rodapé do Stitch - desktop) */}
+            <div className="hidden lg:flex mt-6 mb-2 p-3.5 rounded-2xl bg-white/75 backdrop-blur-md border border-white/70 items-center justify-between text-left">
               <div className="flex flex-col">
                 <span className="text-xs font-semibold text-slate-900">
                   {isLogin ? "Novo no CupomHub?" : "Já possui uma conta?"}
