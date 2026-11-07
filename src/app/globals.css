@@ -1122,21 +1122,9 @@ a.bg-green-800:hover {
   }
 }
 
-/* ── Tela de Login: Fundo Mobile & Desktop ── */
-.login-page-body {
-  width: 100%;
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Mobile background: degradê ciano/roxo com gradiente vertical e grade */
-.login-container {
-  width: 100%;
-  min-height: 100vh;
+/* ── Tela de Login: textura do painel de autenticação ── */
+/* Mobile: textura branca → ciano/roxo com grade vertical */
+.login-texture {
   background: linear-gradient(
       to bottom,
       #fff 0%,
@@ -1146,12 +1134,9 @@ a.bg-green-800:hover {
     linear-gradient(to right, #0ed2da, #5f29c7);
   position: relative;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.login-container::before {
+.login-texture::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -1170,44 +1155,17 @@ a.bg-green-800:hover {
   );
 }
 
-.login-container::after {
-  content: none;
-}
-
-/* Desktop background: degradê pastel com rotação cônica e blur */
+/* Desktop: textura pastel com camadas cônicas rotativas (lado direito) */
 @media (min-width: 1024px) {
-  .login-page-body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    background: linear-gradient(
-      135deg,
-      #ffe8f3,
-      #d9f3ff
-    ); /* Soft pastel gradient background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+  .login-texture {
+    background: linear-gradient(135deg, #ffe8f3, #d9f3ff);
   }
 
-  .login-container {
-    position: relative;
-    width: 100%; /* Fill the entire screen */
-    height: 100%;
-    min-height: 100vh;
-    overflow: hidden;
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.2),
-      rgba(0, 0, 0, 0.1)
-    );
-  }
-
-  .login-container::before,
-  .login-container::after {
+  .login-texture::before,
+  .login-texture::after {
     content: "";
     position: absolute;
+    inset: auto;
     top: 50%;
     left: 50%;
     width: 200%;
@@ -1215,49 +1173,38 @@ a.bg-green-800:hover {
     background: conic-gradient(
       from 0deg,
       #ff9aa2,
-      /* Soft pink */ #ffb7b2,
-      /* Light peach */ #ffdac1,
-      /* Pastel yellow */ #e2f0cb,
-      /* Mint green */ #a2e4ff,
-      /* Baby blue */ #c9afff,
-      /* Lavender */ #ffb7b2,
+      #ffb7b2,
+      #ffdac1,
+      #e2f0cb,
+      #a2e4ff,
+      #c9afff,
+      #ffb7b2,
       #ff9aa2
     );
-    transform: translate(-50%, -50%);
-    animation: rotate 8s linear infinite;
-    filter: blur(50px); /* Create a soft glowing effect */
-    opacity: 0.8;
-    pointer-events: none;
+    background-size: auto;
     mask-image: none;
     -webkit-mask-image: none;
-    background-size: auto;
+    transform: translate(-50%, -50%);
+    animation: login-rotate 8s linear infinite;
+    filter: blur(50px);
+    opacity: 0.8;
+    pointer-events: none;
   }
 
-  /* Secondary rotating layer for depth */
-  .login-container::after {
-    content: "";
+  .login-texture::after {
     width: 180%;
     height: 180%;
-    animation: rotate-reverse 10s linear infinite;
+    animation: login-rotate-reverse 10s linear infinite;
     opacity: 0.6;
   }
 }
 
-/* Rotating animations */
-@keyframes rotate {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
+@keyframes login-rotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-@keyframes rotate-reverse {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(-360deg);
-  }
+@keyframes login-rotate-reverse {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(-360deg); }
 }
