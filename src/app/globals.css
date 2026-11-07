@@ -1121,3 +1121,88 @@ a.bg-green-800:hover {
     opacity: 0;
   }
 }
+
+/* ── Tela de Login: textura do painel de autenticação ── */
+/* Equivalente ao "body" da textura (painel direito no desktop / tela toda no mobile) */
+.login-texture {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #e0f7fa, /* Azul piscina bem claro */
+    #e8f5e9  /* Verde menta suave */
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Equivalente ao ".container" da textura */
+.login-texture-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2),
+    rgba(0, 0, 0, 0.05)
+  );
+}
+
+.login-texture-layer::before,
+.login-texture-layer::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    #a2d2ff, /* Azul claro suave */
+    #bde0fe, /* Azul bebê */
+    #caffbf, /* Menta claro */
+    #fdffb6, /* Toque sutil de amarelo pastel */
+    #caffbf, /* Volta rápido pro menta */
+    #a7f3d0, /* Verde água claro */
+    #90e0ef, /* Ciano suave */
+    #a2d2ff  /* Fecha no azul inicial */
+  );
+  transform: translate(-50%, -50%);
+  animation: login-rotate 8s linear infinite;
+  filter: blur(50px); /* Create a soft glowing effect */
+  opacity: 0.8;
+}
+
+/* Secondary rotating layer for depth */
+.login-texture-layer::after {
+  width: 180%;
+  height: 180%;
+  animation: login-rotate-reverse 10s linear infinite;
+  opacity: 0.6;
+}
+
+/* Rotating animations */
+@keyframes login-rotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes login-rotate-reverse {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}

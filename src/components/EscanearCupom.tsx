@@ -18,7 +18,6 @@ import {
   Camera,
   ImagePlus,
   Link2,
-  Barcode,
   RotateCcw,
   Loader2,
   CheckCircle2,
@@ -55,7 +54,6 @@ type ModoScanner =
   | 'camera'
   | 'imagem'
   | 'url'
-  | 'chave'
   | 'resumo-lote'
   | 'lote-manual'
 
@@ -69,7 +67,7 @@ export interface TracePasso {
 export interface ItemLoteNota {
   id: string
   rawCode: string
-  tipo: 'url' | 'chave'
+  tipo: 'url'
   status: 'processando' | 'sucesso' | 'erro'
   hora: string
   nota?: NotaFiscalResponse
@@ -143,7 +141,6 @@ export function EscanearCupom() {
   const [conteudoLido, setConteudoLido] = useState<string | null>(null)
   const [erro, setErro] = useState<string | null>(null)
   const [urlManual, setUrlManual] = useState('')
-  const [chaveManual, setChaveManual] = useState('')
   const [modo, setModo] = useState<ModoScanner>('selecao')
   const [carregandoImagem, setCarregandoImagem] = useState(false)
   const [processando, setProcessando] = useState(false)
@@ -151,8 +148,6 @@ export function EscanearCupom() {
     useState<NotaFiscalResponse | null>(null)
   const [rodandoTour, setRodandoTour] = useState(false)
   const [passoTour, setPassoTour] = useState(0)
-  /** Indica que a nota veio via chave (barcode) e não via URL */
-  const [processadoViaChave, setProcessadoViaChave] = useState(false)
   const [modalEditarAberto, setModalEditarAberto] = useState(false)
   const [notaEmEdicao, setNotaEmEdicao] = useState<NotaFiscalResponse | null>(null)
 
@@ -217,36 +212,44 @@ export function EscanearCupom() {
   const passosTour = useMemo<Step[]>(
     () => [
       {
-        target: '[data-tour="modos-escanear"]',
-        content:
-          'Aqui você escolhe como quer capturar o cupom: câmera, foto, URL manual ou chave de acesso.',
-        placement: 'bottom',
-        disableBeacon: true,
-      },
-      {
         target: '[data-tour="toggle-continuo"]',
         content:
           'Com o Modo Contínuo ativado, você pode escanear vários cupons em sequência sem precisar fechar a câmera!',
+        placement: 'bottom',
+        disableBeacon: true,
+        skipBeacon: true,
+      },
+      {
+        target: '[data-tour="modos-escanear"]',
+        content:
+          'Aqui você escolhe como quer capturar o cupom: câmera, foto ou URL manual.',
+        placement: 'bottom',
+        disableBeacon: true,
+        skipBeacon: true,
       },
       {
         target: '[data-tour="modo-camera"]',
         content:
-          'Câmera: leitura ao vivo de QR code e também do código de barras da chave de acesso.',
+          'Câmera: leitura ao vivo do QR code do cupom fiscal.',
+        placement: 'bottom',
+        disableBeacon: true,
+        skipBeacon: true,
       },
       {
         target: '[data-tour="modo-imagem"]',
         content:
           'Enviar foto: use uma imagem salva que já contenha o QR code do cupom fiscal.',
+        placement: 'bottom',
+        disableBeacon: true,
+        skipBeacon: true,
       },
       {
         target: '[data-tour="modo-url"]',
         content:
           'URL manual: cole o link da NFC-e quando preferir ou não conseguir escanear.',
-      },
-      {
-        target: '[data-tour="modo-chave"]',
-        content:
-          'Código de barras: consulte pela chave de acesso numérica com 44 dígitos.',
+        placement: 'top',
+        disableBeacon: true,
+        skipBeacon: true,
       },
     ],
     [],
@@ -258,8 +261,6 @@ export function EscanearCupom() {
     setNotaProcessada(null)
     setModo('selecao')
     setUrlManual('')
-    setChaveManual('')
-    setProcessadoViaChave(false)
   }
 
   const limparSessaoLote = () => {
@@ -274,12 +275,15 @@ export function EscanearCupom() {
       setTimeout(() => {
         setPassoTour(0)
         setRodandoTour(true)
-      }, 0)
+      }, 50)
       return
     }
 
-    setPassoTour(0)
-    setRodandoTour(true)
+    setRodandoTour(false)
+    setTimeout(() => {
+      setPassoTour(0)
+      setRodandoTour(true)
+    }, 20)
   }
 
   const onJoyrideCallback = (data: EventData) => {
@@ -309,7 +313,7 @@ export function EscanearCupom() {
   const processarItemLote = async (
     id: string,
     rawCode: string,
-    tipo: 'url' | 'chave',
+    _tipo: 'url' = 'url',
   ) => {
     const horaInicio = new Date().toLocaleTimeString('pt-BR')
     const traceInicial: TracePasso[] = [
@@ -317,7 +321,7 @@ export function EscanearCupom() {
         titulo: 'Registro na fila de processamento',
         horario: horaInicio,
         status: 'sucesso',
-        detalhe: tipo === 'chave' ? `Chave: ${rawCode}` : `URL: ${rawCode.slice(0, 50)}...`,
+        detalhe: `URL: ${rawCode.slice(0, 50)}...`,
       },
       {
         titulo: 'Conexão com portal SEFAZ Estadual',
@@ -349,26 +353,14 @@ export function EscanearCupom() {
         throw new Error('Faça login para processar notas fiscais.')
       }
 
-      let response: Response
-      if (tipo === 'chave') {
-        response = await fetch(`${API_URL}/notas-fiscais/processar-chave`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...getAuthHeaders(),
-          },
-          body: JSON.stringify({ chaveAcesso: rawCode }),
-        })
-      } else {
-        response = await fetch(`${API_URL}/notas-fiscais/processar`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...getAuthHeaders(),
-          },
-          body: JSON.stringify({ url: rawCode }),
-        })
-      }
+      const response = await fetch(`${API_URL}/notas-fiscais/processar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify({ url: rawCode }),
+      })
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
@@ -383,7 +375,7 @@ export function EscanearCupom() {
           titulo: 'Registro na fila de processamento',
           horario: horaInicio,
           status: 'sucesso',
-          detalhe: tipo === 'chave' ? `Chave: ${rawCode}` : `URL: ${rawCode.slice(0, 50)}...`,
+          detalhe: `URL: ${rawCode.slice(0, 50)}...`,
         },
         {
           titulo: 'Conexão com portal SEFAZ Estadual',
@@ -426,7 +418,7 @@ export function EscanearCupom() {
           titulo: 'Registro na fila de processamento',
           horario: horaInicio,
           status: 'sucesso',
-          detalhe: tipo === 'chave' ? `Chave: ${rawCode}` : `URL: ${rawCode.slice(0, 50)}...`,
+          detalhe: `URL: ${rawCode.slice(0, 50)}...`,
         },
         {
           titulo: 'Conexão com portal SEFAZ Estadual',
@@ -536,59 +528,7 @@ export function EscanearCupom() {
     }
   }
 
-  /* ── Processar nota individual por Chave de Acesso ──────────── */
-  const enviarChaveParaProcessar = async (chave?: string) => {
-    const chaveAcesso = (chave || chaveManual).replace(/\D/g, '').trim()
 
-    if (!chaveAcesso || chaveAcesso.length !== 44) {
-      setErro('A chave de acesso deve conter exatamente 44 dígitos numéricos.')
-      return
-    }
-
-    setProcessando(true)
-    setErro(null)
-    iniciarTimerTraceIndividual()
-    try {
-      const token = getAccessToken()
-      if (!token) {
-        throw new Error('Faça login para processar notas fiscais.')
-      }
-      const response = await fetch(
-        `${API_URL}/notas-fiscais/processar-chave`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...getAuthHeaders(),
-          },
-          body: JSON.stringify({ chaveAcesso }),
-        },
-      )
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.message || `Erro ${response.status}`)
-      }
-
-      setPassoIndividual(5)
-      const nota: NotaFiscalResponse = await response.json()
-      setNotaProcessada(nota)
-      setProcessadoViaChave(true)
-      setConteudoLido(chaveAcesso)
-      playBeep('sucesso')
-    } catch (e) {
-      console.error('Erro ao processar via chave:', e)
-      playBeep('erro')
-      setErro(
-        e instanceof Error
-          ? e.message
-          : 'Erro ao processar nota via chave de acesso',
-      )
-    } finally {
-      finalizarTimerTraceIndividual()
-      setProcessando(false)
-    }
-  }
 
   const enviarUrlManual = () => {
     const url = urlManual.trim()
@@ -646,20 +586,37 @@ export function EscanearCupom() {
           const result = await scanner.scanFileV2(file, true)
           const value = result.decodedText.trim()
           const apenasDigitos = value.replace(/\D/g, '')
-          const isChave = /^\d{44}$/.test(apenasDigitos)
-          const rawFinal = isChave ? apenasDigitos : value
-          const tipo: 'url' | 'chave' = isChave ? 'chave' : 'url'
+          if (/^\d{44}$/.test(apenasDigitos)) {
+            const itemFalha: ItemLoteNota = {
+              id: novoId,
+              rawCode: file.name,
+              tipo: 'url',
+              status: 'erro',
+              hora,
+              erro: 'A consulta por código de barras de 44 dígitos foi descontinuada pela SEFAZ. Utilize fotos do QR Code.',
+              trace: [
+                {
+                  titulo: `Upload do arquivo: ${file.name}`,
+                  horario: hora,
+                  status: 'erro',
+                  detalhe: 'A consulta manual por código de barras foi descontinuada pela SEFAZ. Por favor, envie uma foto contendo o QR Code do cupom.',
+                },
+              ],
+            }
+            setItensLote((prev) => [itemFalha, ...prev])
+            continue
+          }
 
           const novoItem: ItemLoteNota = {
             id: novoId,
-            rawCode: rawFinal,
-            tipo,
+            rawCode: value,
+            tipo: 'url',
             status: 'processando',
             hora,
           }
 
           setItensLote((prev) => [novoItem, ...prev])
-          processarItemLote(novoId, rawFinal, tipo)
+          processarItemLote(novoId, value)
           lidos++
         } catch {
           const itemFalha: ItemLoteNota = {
@@ -693,7 +650,7 @@ export function EscanearCupom() {
     }
   }
 
-  /* ── Iniciar Processamento Manual em Lote (URLs / Chaves coladas) */
+  /* ── Iniciar Processamento Manual em Lote (URLs coladas) ──────── */
   const processarLoteManual = () => {
     if (!loteManualTexto.trim()) return
 
@@ -703,7 +660,7 @@ export function EscanearCupom() {
       .filter(Boolean)
 
     if (linhas.length === 0) {
-      setErro('Insira pelo menos uma URL ou chave de acesso válida.')
+      setErro('Insira pelo menos uma URL de cupom fiscal válida.')
       return
     }
 
@@ -711,24 +668,44 @@ export function EscanearCupom() {
     linhas.forEach((linha, idx) => {
       const apenasDigitos = linha.replace(/\D/g, '')
       const isChave = /^\d{44}$/.test(apenasDigitos)
-      const rawFinal = isChave ? apenasDigitos : linha
-      const tipo: 'url' | 'chave' = isChave ? 'chave' : 'url'
 
       const novoId =
         typeof crypto !== 'undefined' && crypto.randomUUID
           ? crypto.randomUUID()
           : `${Date.now()}-${idx}-${Math.random()}`
+      const hora = new Date().toLocaleTimeString('pt-BR')
+
+      if (isChave) {
+        const itemFalha: ItemLoteNota = {
+          id: novoId,
+          rawCode: linha,
+          tipo: 'url',
+          status: 'erro',
+          hora,
+          erro: 'Código de barras de 44 dígitos descontinuado pela SEFAZ. Insira a URL do QR Code.',
+          trace: [
+            {
+              titulo: 'Chave de 44 dígitos ignorada',
+              horario: hora,
+              status: 'erro',
+              detalhe: 'A consulta direta por código de barras foi descontinuada pela SEFAZ. Cole a URL obtida pelo QR Code.',
+            },
+          ],
+        }
+        setItensLote((prev) => [itemFalha, ...prev])
+        return
+      }
 
       const novoItem: ItemLoteNota = {
         id: novoId,
-        rawCode: rawFinal,
-        tipo,
+        rawCode: linha,
+        tipo: 'url',
         status: 'processando',
-        hora: new Date().toLocaleTimeString('pt-BR'),
+        hora,
       }
 
       setItensLote((prev) => [novoItem, ...prev])
-      processarItemLote(novoId, rawFinal, tipo)
+      processarItemLote(novoId, linha)
       adicionados++
     })
 
@@ -758,15 +735,18 @@ export function EscanearCupom() {
       ultimoScanRef.current = { raw: value, time: agora }
 
       const apenasDigitos = value.replace(/\D/g, '')
-      const isChave = /^\d{44}$/.test(apenasDigitos)
-      const rawFinal = isChave ? apenasDigitos : value
-      const tipo: 'url' | 'chave' = isChave ? 'chave' : 'url'
+      if (/^\d{44}$/.test(apenasDigitos)) {
+        triggerVibrate([200, 100, 200])
+        playBeep('erro')
+        exibirAviso('⚠️ Código de barras descontinuado pela SEFAZ. Aponte para o QR Code!')
+        return
+      }
 
       // Verifica se já foi escaneado no lote atual
       const jaExiste = itensLote.some(
         (i) =>
-          i.rawCode === rawFinal ||
-          (i.nota?.chaveAcesso && i.nota.chaveAcesso === rawFinal),
+          i.rawCode === value ||
+          (i.nota?.chaveAcesso && i.nota.chaveAcesso === value),
       )
 
       if (jaExiste) {
@@ -789,8 +769,8 @@ export function EscanearCupom() {
 
       const novoItem: ItemLoteNota = {
         id: novoId,
-        rawCode: rawFinal,
-        tipo,
+        rawCode: value,
+        tipo: 'url',
         status: 'processando',
         hora: new Date().toLocaleTimeString('pt-BR', {
           hour: '2-digit',
@@ -800,16 +780,15 @@ export function EscanearCupom() {
       }
 
       setItensLote((prev) => [novoItem, ...prev])
-      processarItemLote(novoId, rawFinal, tipo)
+      processarItemLote(novoId, value)
       return
     }
 
     // ── MODO INDIVIDUAL PADRÃO ──
     const apenasDigitos = value.replace(/\D/g, '')
     if (/^\d{44}$/.test(apenasDigitos)) {
-      setChaveManual(apenasDigitos)
-      setModo('chave')
-      setConteudoLido(null)
+      setErro('A consulta por código de barras de 44 dígitos foi descontinuada pela SEFAZ. Por favor, aponte a câmera para o QR Code do cupom.')
+      playBeep('erro')
       return
     }
 
@@ -853,7 +832,7 @@ export function EscanearCupom() {
 
       <div className="space-y-2.5">
         {[
-          { passo: 1, label: '1. Validação de formato da chave / URL' },
+          { passo: 1, label: '1. Validação de formato da URL do cupom' },
           { passo: 2, label: '2. Conexão com portal SEFAZ Estadual' },
           { passo: 3, label: '3. Extração dos produtos, valores e tributos' },
           { passo: 4, label: '4. Higienização e categorização inteligente' },
@@ -913,7 +892,8 @@ export function EscanearCupom() {
         options={{
           buttons: ['back', 'close', 'primary', 'skip'],
           primaryColor: '#166534',
-          skipScroll: true,
+          skipBeacon: true,
+          scrollOffset: 70,
           zIndex: 10000,
         }}
       />
@@ -943,7 +923,7 @@ export function EscanearCupom() {
       </header>
 
       {/* ─── Erro global (quando nada foi lido ainda) ─────────── */}
-      {erro && !conteudoLido && modo !== 'chave' && (
+      {erro && !conteudoLido && (
         <div
           className="bg-red-50 text-red-700 p-4 rounded-xl mb-4 text-center flex flex-col items-center gap-3 border border-red-200"
           role="alert"
@@ -1036,14 +1016,14 @@ export function EscanearCupom() {
           </div>
 
           <div
-            className="grid grid-cols-2 gap-3.5 w-full"
+            className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 w-full"
             data-tour="modos-escanear"
           >
             {/* Câmera */}
             <button
               type="button"
               data-tour="modo-camera"
-              className="flex flex-col items-center gap-2.5 p-5 rounded-2xl border-2 border-emerald-200 bg-emerald-50/60 hover:border-emerald-500 hover:bg-emerald-100/70 transition-all group shadow-sm text-center relative overflow-hidden"
+              className="col-span-2 sm:col-span-1 flex flex-col items-center gap-2.5 p-5 rounded-2xl border-2 border-emerald-200 bg-emerald-50/60 hover:border-emerald-500 hover:bg-emerald-100/70 transition-all group shadow-sm text-center relative overflow-hidden"
               onClick={() => setModo('camera')}
             >
               {modoContinuo && (
@@ -1069,7 +1049,7 @@ export function EscanearCupom() {
             {/* Upload imagem */}
             <label
               data-tour="modo-imagem"
-              className="flex flex-col items-center gap-2.5 p-5 rounded-2xl border-2 border-teal-200 bg-teal-50/60 hover:border-teal-500 hover:bg-teal-100/70 transition-all cursor-pointer group shadow-sm text-center"
+              className="col-span-1 flex flex-col items-center gap-2.5 p-5 rounded-2xl border-2 border-teal-200 bg-teal-50/60 hover:border-teal-500 hover:bg-teal-100/70 transition-all cursor-pointer group shadow-sm text-center"
             >
               <div className="p-3 bg-white rounded-xl shadow-sm text-teal-700 group-hover:scale-110 transition-transform">
                 <ImagePlus className="h-7 w-7" />
@@ -1096,7 +1076,7 @@ export function EscanearCupom() {
             <button
               type="button"
               data-tour="modo-url"
-              className="flex flex-col items-center gap-2.5 p-5 rounded-2xl border-2 border-blue-200 bg-blue-50/60 hover:border-blue-500 hover:bg-blue-100/70 transition-all group shadow-sm text-center"
+              className="col-span-1 flex flex-col items-center gap-2.5 p-5 rounded-2xl border-2 border-blue-200 bg-blue-50/60 hover:border-blue-500 hover:bg-blue-100/70 transition-all group shadow-sm text-center"
               onClick={() => setModo('url')}
             >
               <div className="p-3 bg-white rounded-xl shadow-sm text-blue-700 group-hover:scale-110 transition-transform">
@@ -1110,30 +1090,10 @@ export function EscanearCupom() {
               </div>
             </button>
 
-            {/* Código de Barras / Chave de Acesso */}
-            <button
-              type="button"
-              data-tour="modo-chave"
-              className="flex flex-col items-center gap-2.5 p-5 rounded-2xl border-2 border-amber-200 bg-amber-50/60 hover:border-amber-500 hover:bg-amber-100/70 transition-all group shadow-sm text-center"
-              onClick={() => setModo('chave')}
-            >
-              <div className="p-3 bg-white rounded-xl shadow-sm text-amber-700 group-hover:scale-110 transition-transform">
-                <Barcode className="h-7 w-7" />
-              </div>
-              <div>
-                <span className="block text-sm font-semibold text-amber-900">
-                  Cód. de Barras
-                </span>
-                <span className="text-xs text-amber-700/80">
-                  Chave 44 dígitos
-                </span>
-              </div>
-            </button>
-
             {/* Colar Múltiplas Notas em Lote */}
             <button
               type="button"
-              className="col-span-2 flex items-center justify-between p-4 rounded-2xl border-2 border-indigo-200 bg-indigo-50/70 hover:border-indigo-500 hover:bg-indigo-100/80 transition-all group shadow-sm text-left"
+              className="col-span-2 sm:col-span-3 flex items-center justify-between p-4 rounded-2xl border-2 border-indigo-200 bg-indigo-50/70 hover:border-indigo-500 hover:bg-indigo-100/80 transition-all group shadow-sm text-left"
               onClick={() => setModo('lote-manual')}
             >
               <div className="flex items-center gap-3">
@@ -1145,7 +1105,7 @@ export function EscanearCupom() {
                     Colar Múltiplas Notas (Lote)
                   </span>
                   <span className="text-xs text-indigo-700/80">
-                    Cole várias URLs ou chaves de 44 dígitos de uma vez com trace
+                    Cole várias URLs de uma vez com trace
                   </span>
                 </div>
               </div>
@@ -1229,7 +1189,7 @@ export function EscanearCupom() {
               ) : (
                 <div className="bg-black/60 text-gray-200 text-[11px] px-3 py-1 rounded-full backdrop-blur-sm">
                   {modoContinuo
-                    ? 'Aponte para o QR code ou código de barras de cada cupom'
+                    ? 'Aponte para o QR code de cada cupom'
                     : 'Aponte para o QR code do cupom fiscal'}
                 </div>
               )}
@@ -1837,7 +1797,7 @@ export function EscanearCupom() {
       )}
 
       {/* ═══════════════════════════════════════════════════════ */}
-      {/* MODO: Processamento em Lote Manual (URLs / Chaves)     */}
+      {/* MODO: Processamento em Lote Manual (URLs)             */}
       {/* ═══════════════════════════════════════════════════════ */}
       {modo === 'lote-manual' && (
         <div className="p-6 bg-indigo-50/70 border border-indigo-200 rounded-2xl shadow-sm animate-fadeIn">
@@ -1850,20 +1810,20 @@ export function EscanearCupom() {
                 Processar Várias Notas em Lote
               </h3>
               <p className="text-xs text-indigo-700">
-                Cole uma lista com múltiplos cupons (URLs ou chaves numéricas)
+                Cole uma lista com URLs de cupons fiscais
               </p>
             </div>
           </div>
 
           <p className="text-gray-600 text-xs my-3">
-            Insira uma URL ou chave de 44 dígitos por linha. O sistema irá enfileirar e processar todas simultaneamente exibindo o trace de cada uma em tempo real.
+            Insira uma URL de cupom fiscal por linha (obtida via QR code). O sistema irá enfileirar e processar todas simultaneamente exibindo o trace de cada uma em tempo real.
           </p>
 
           <textarea
             rows={6}
             value={loteManualTexto}
             onChange={(e) => setLoteManualTexto(e.target.value)}
-            placeholder={`https://www.fazenda.sp.gov.br/nfce/qrcode?p=...\n35231012345678000199650010000001231000001234\nhttps://...`}
+            placeholder={`https://www.fazenda.sp.gov.br/nfce/qrcode?p=...\nhttps://...`}
             className="w-full p-3 border border-indigo-300 rounded-xl mb-3 font-mono text-xs focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 bg-white"
           />
 
@@ -1949,109 +1909,12 @@ export function EscanearCupom() {
         </div>
       )}
 
-      {/* ═══════════════════════════════════════════════════════ */}
-      {/* MODO: Chave de Acesso / Código de Barras               */}
-      {/* ═══════════════════════════════════════════════════════ */}
-      {modo === 'chave' && !notaProcessada && (
-        <div className="p-6 bg-amber-50 border border-amber-200 rounded-2xl">
-          <div className="flex items-center gap-2 mb-3">
-            <ScanLine className="h-5 w-5 text-amber-600" />
-            <h3 className="text-lg font-semibold text-gray-800">
-              Chave de Acesso
-            </h3>
-          </div>
-          <p className="text-gray-600 text-sm mb-4">
-            Digite ou escaneie os 44 dígitos do código de barras do cupom
-            fiscal. A consulta será feita automaticamente no site da SEFAZ.
-          </p>
 
-          <div className="relative mb-2">
-            <input
-              type="text"
-              inputMode="numeric"
-              maxLength={53}
-              className="w-full p-3 pr-16 border border-amber-300 rounded-xl font-mono text-sm tracking-wider focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 bg-white"
-              placeholder="3526 0349 0923 9800 1609 6549 4000 1607 9963 2146 8000"
-              value={chaveManual
-                .replace(/\D/g, '')
-                .replace(/(\d{4})(?=\d)/g, '$1 ')}
-              onChange={(e) =>
-                setChaveManual(e.target.value.replace(/\D/g, '').slice(0, 44))
-              }
-            />
-            <span
-              className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium ${
-                chaveManual.replace(/\D/g, '').length === 44
-                  ? 'text-green-600'
-                  : 'text-gray-400'
-              }`}
-            >
-              {chaveManual.replace(/\D/g, '').length}/44
-            </span>
-          </div>
-
-          {/* Barra de progresso visual */}
-          <div className="h-1.5 w-full bg-gray-200 rounded-full mb-4 overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-300"
-              style={{
-                width: `${Math.min((chaveManual.replace(/\D/g, '').length / 44) * 100, 100)}%`,
-                background:
-                  chaveManual.replace(/\D/g, '').length === 44
-                    ? '#16a34a'
-                    : '#f59e0b',
-              }}
-            />
-          </div>
-
-          {erro && (
-            <div
-              className="bg-red-50 text-red-700 p-3 rounded-xl mb-4 text-sm flex items-start gap-2"
-              role="alert"
-            >
-              <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-              <p>{erro}</p>
-            </div>
-          )}
-
-          <div className="flex flex-wrap gap-3 justify-center">
-            <button
-              type="button"
-              className="px-4 py-2 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors text-sm"
-              onClick={recomecar}
-            >
-              Voltar
-            </button>
-            <button
-              type="button"
-              className="px-5 py-2 bg-amber-600 text-white rounded-xl hover:bg-amber-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-medium"
-              onClick={() => enviarChaveParaProcessar()}
-              disabled={
-                processando || chaveManual.replace(/\D/g, '').length !== 44
-              }
-            >
-              {processando ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Consultando SEFAZ...
-                </>
-              ) : (
-                <>
-                  <ScanLine className="h-4 w-4" />
-                  Consultar Nota
-                </>
-              )}
-            </button>
-          </div>
-
-          {processando && renderCardTraceIndividual()}
-        </div>
-      )}
 
       {/* ═══════════════════════════════════════════════════════ */}
       {/* CONTEÚDO LIDO (Modo individual) — aguardando envio    */}
       {/* ═══════════════════════════════════════════════════════ */}
-      {conteudoLido && !notaProcessada && !processadoViaChave && (
+      {conteudoLido && !notaProcessada && (
         <section className="p-6 bg-green-50 border border-green-200 rounded-2xl">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle2 className="h-5 w-5 text-green-600" />
@@ -2115,14 +1978,7 @@ export function EscanearCupom() {
             </h2>
           </div>
 
-          {processadoViaChave && (
-            <div className="mb-4 px-3 py-2 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-2">
-              <Barcode className="h-4 w-4 text-amber-600 shrink-0" />
-              <p className="text-xs text-amber-700">
-                Consultada via chave de acesso
-              </p>
-            </div>
-          )}
+
 
           <div className="grid sm:grid-cols-2 gap-3 mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-100">
             <p className="text-sm">

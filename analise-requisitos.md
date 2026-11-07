@@ -9,7 +9,7 @@ O **De Olho na Nota** é uma solução completa de controle financeiro pessoal, 
 
 A aplicação opera através de dois repositórios complementares:
 1. **Backend (`de-olho-na-nota`)**: Uma API REST modular desenvolvida em **NestJS** e **MongoDB (Mongoose)**, responsável pelo processamento assíncrono de notas fiscais, web scraping de portais estaduais da SEFAZ, quebra automatizada de CAPTCHA via OCR/Visão Computacional, categorização inteligente com LLM (**Qwen 2.5 72B via OpenRouter**) e algoritmos determinísticos de consumo e lista de compras.
-2. **Frontend (`de-olho-na-nota-web`)**: Uma aplicação web moderna e responsiva construída em **Next.js 16 (App Router)** e **Tailwind CSS v4**, dotada de leitor de QR Code/Código de Barras em tempo real, dashboards analíticos com gráficos empilhados e de evolução temporal, gestão de apelidos (de-para), visualização interativa em estilo caderno de notas e exportação de relatórios em PDF e CSV.
+2. **Frontend (`de-olho-na-nota-web`)**: Uma aplicação web moderna e responsiva construída em **Next.js 16 (App Router)** e **Tailwind CSS v4**, dotada de leitor de QR Code em tempo real, dashboards analíticos com gráficos empilhados e de evolução temporal, gestão de apelidos (de-para), visualização interativa em estilo caderno de notas e exportação de relatórios em PDF e CSV.
 
 ---
 
@@ -47,7 +47,7 @@ A aplicação opera através de dois repositórios complementares:
 flowchart TD
     subgraph Frontend["Frontend Client — Next.js 16 (App Router)"]
         UI["Interface de Usuário (React 19 + Tailwind CSS 4)"]
-        Scanner["Scanner QR / Barcode (html5-qrcode & yudiel-scanner)"]
+        Scanner["Scanner QR Code (html5-qrcode & yudiel-scanner)"]
         Charts["Visualizações Chart.js (Stacked Bar / Line Evolution)"]
         Reports["Exportação Client-Side (jsPDF & CSV Generator)"]
         Storage["Armazenamento Local (localStorage — Cache & Sync Lote)"]
@@ -132,8 +132,8 @@ flowchart TD
 | **RF-009** | Escaneamento de Cupom via Câmera | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar` | `POST` | Aciona a webcam ou câmera móvel para leitura ao vivo do QR Code impresso no cupom e submete a URL para extração. |
 | **RF-010** | Leitura de Imagem do Cupom | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar` | `POST` | Permite o upload de arquivos de imagem locais contendo o QR Code do cupom, decodificando o texto via `html5-qrcode` e processando. |
 | **RF-011** | Inserção Manual de Link NFC-e | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar` | `POST` | Recebe a URL da consulta pública da nota digitada ou colada pelo usuário e efetua requisição HTTP com parsing de DOM via Cheerio. |
-| **RF-012** | Consulta Pública por Chave de Acesso | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar-chave` | `POST` | Recebe a chave de 44 dígitos, acessa a SEFAZ-SP, obtém tokens de sessão ASP.NET, baixa e soluciona o CAPTCHA via OCR e extrai os itens da nota. |
-| **RF-013** | Retry e Tolerância a Falha de CAPTCHA | N/A (Execução Backend) | `/notas-fiscais/processar-chave` | `POST` | Em caso de OCR impreciso ou rejeição do código pelo servidor da fazenda, repete o ciclo de recuperação de imagem e OCR por até 3 vezes. |
+| **RF-012** | Consulta Pública por Chave de Acesso (Descontinuado) | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar-chave` | `POST` | *Descontinuado pela SEFAZ.* Recebia a chave de 44 dígitos para extração com resolução de CAPTCHA. O fluxo foi centralizado na leitura de QR Code. |
+| **RF-013** | Retry e Tolerância a Falha de CAPTCHA (Descontinuado) | N/A (Execução Backend) | `/notas-fiscais/processar-chave` | `POST` | *Descontinuado.* Em caso de OCR impreciso ou rejeição do código pelo servidor da fazenda, repetia o ciclo de recuperação de imagem e OCR por até 3 vezes. |
 | **RF-014** | Prevenção de Duplicidade de Notas | `/` (`EscanearCupom.tsx`) | `/notas-fiscais/processar*` | `POST` | Bloqueia a inserção da mesma nota fiscal para o mesmo usuário através do índice composto único `{ chaveAcesso: 1, userId: 1 }`. |
 
 ---
