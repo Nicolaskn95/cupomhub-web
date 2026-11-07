@@ -434,7 +434,7 @@ function LoginFormContent() {
               )}
 
               {isLogin && (
-                <div className="flex items-center justify-between text-xs pt-0.5">
+                <div className="flex items-center text-xs pt-0.5">
                   <div className="flex items-center gap-2 select-none">
                     <button
                       type="button"
@@ -458,12 +458,6 @@ function LoginFormContent() {
                       Lembrar de mim
                     </label>
                   </div>
-                  <button
-                    type="button"
-                    className="font-semibold text-[#002545] hover:text-[#1b6d24] hover:underline"
-                  >
-                    Esqueceu a senha?
-                  </button>
                 </div>
               )}
 
