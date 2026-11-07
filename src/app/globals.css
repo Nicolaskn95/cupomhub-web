@@ -1129,9 +1129,9 @@ a.bg-green-800:hover {
   min-height: 100vh;
   background: linear-gradient(
     135deg,
-    #ffe8f3,
-    #d9f3ff
-  ); /* Soft pastel gradient background */
+    #e0f7fa, /* Azul piscina bem claro */
+    #e8f5e9  /* Verde menta suave */
+  );
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1151,7 +1151,7 @@ a.bg-green-800:hover {
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.2),
-    rgba(0, 0, 0, 0.1)
+    rgba(0, 0, 0, 0.05)
   );
 }
 
@@ -1165,14 +1165,14 @@ a.bg-green-800:hover {
   height: 200%;
   background: conic-gradient(
     from 0deg,
-    #ff9aa2,
-    /* Soft pink */ #ffb7b2,
-    /* Light peach */ #ffdac1,
-    /* Pastel yellow */ #e2f0cb,
-    /* Mint green */ #a2e4ff,
-    /* Baby blue */ #c9afff,
-    /* Lavender */ #ffb7b2,
-    #ff9aa2
+    #a2d2ff, /* Azul claro suave */
+    #bde0fe, /* Azul bebê */
+    #caffbf, /* Menta claro */
+    #fdffb6, /* Toque sutil de amarelo pastel */
+    #caffbf, /* Volta rápido pro menta */
+    #a7f3d0, /* Verde água claro */
+    #90e0ef, /* Ciano suave */
+    #a2d2ff  /* Fecha no azul inicial */
   );
   transform: translate(-50%, -50%);
   animation: login-rotate 8s linear infinite;
